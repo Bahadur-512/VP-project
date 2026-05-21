@@ -1,0 +1,10 @@
+bin/
+obj/
+.vs/
+*.db
+*.user
+*.suo
+appsettings.*.local
+wwwroot/uploads/
+.DS_Store
+Thumbs.db
