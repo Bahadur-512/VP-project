@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="CivicPulse.Core/CivicPulse.Core.csproj" />
+  <Project Path="CivicPulse.Infrastructure/CivicPulse.Infrastructure.csproj" />
+  <Project Path="CivicPulse.Web/CivicPulse.Web.csproj" />
+</Solution>
