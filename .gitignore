@@ -8,3 +8,5 @@ appsettings.*.local
 wwwroot/uploads/
 .DS_Store
 Thumbs.db
+
+*.db*
