@@ -31,7 +31,7 @@ window.CivicCharts = {
                     legend: { position: 'bottom', labels: { padding: 16, font: { size: 12 } } },
                     title: { display: !!title, text: title, font: { size: 14, weight: 'bold' }, padding: { bottom: 12 } }
                 },
-                scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } }, x: { grid: { display: false } } }
+                scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { stepSize: 1, precision: 0 } }, x: { grid: { display: false } } }
             }
         });
     },
@@ -49,7 +49,7 @@ window.CivicCharts = {
                     legend: { position: 'bottom', labels: { padding: 16, font: { size: 12 } } },
                     title: { display: !!title, text: title, font: { size: 14, weight: 'bold' }, padding: { bottom: 12 } }
                 },
-                scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } }, x: { grid: { display: false } } },
+                scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { stepSize: 1, precision: 0 } }, x: { grid: { display: false } } },
                 elements: {
                     point: { radius: 4, hoverRadius: 6, backgroundColor: '#1B3A6B', borderColor: '#1B3A6B' },
                     line: { tension: 0.4 }
@@ -71,7 +71,7 @@ window.CivicCharts = {
                     legend: { display: false },
                     title: { display: !!title, text: title, font: { size: 14, weight: 'bold' }, padding: { bottom: 12 } }
                 },
-                scales: { x: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } }, y: { grid: { display: false } } }
+                scales: { x: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { stepSize: 1, precision: 0 } }, y: { grid: { display: false } } }
             }
         });
     },
