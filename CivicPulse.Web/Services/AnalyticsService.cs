@@ -87,22 +87,31 @@ public class AnalyticsService : IAnalyticsService
 
     public async Task<List<MonthlyTrendDto>> GetMonthlyTrendAsync(int months = 12)
     {
-        var startDate = DateTime.UtcNow.AddMonths(-months);
+        var now = DateTime.UtcNow;
+        var startDate = now.AddMonths(-months);
+
         var complaints = await _complaintRepo.Query()
             .Where(c => c.CreatedAt >= startDate && !c.IsArchived)
             .ToListAsync();
 
-        return complaints
+        var grouped = complaints
             .GroupBy(c => new { c.CreatedAt.Year, c.CreatedAt.Month })
-            .Select(g => new MonthlyTrendDto
+            .ToDictionary(g => (g.Key.Year, g.Key.Month), g => g.Count());
+
+        var result = new List<MonthlyTrendDto>();
+        for (int i = months; i >= 0; i--)
+        {
+            var date = now.AddMonths(-i);
+            var key = (date.Year, date.Month);
+            result.Add(new MonthlyTrendDto
             {
-                Year = g.Key.Year,
-                Month = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMM"),
-                Count = g.Count()
-            })
-            .OrderBy(m => m.Year)
-            .ThenBy(m => m.Month)
-            .ToList();
+                Year = date.Year,
+                Month = date.ToString("MMM"),
+                Count = grouped.TryGetValue(key, out var count) ? count : 0
+            });
+        }
+
+        return result;
     }
 
     public async Task<List<ResolutionTimeDto>> GetAverageResolutionTimeAsync()
