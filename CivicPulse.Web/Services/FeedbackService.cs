@@ -82,6 +82,7 @@ public class FeedbackService : IFeedbackService
         var feedbacks = await _feedbackRepo.Query()
             .Include(f => f.Citizen)
             .Include(f => f.Complaint)
+            .Where(f => f.Complaint != null && (f.Complaint.Status == ComplaintStatus.Resolved || f.Complaint.Status == ComplaintStatus.Closed))
             .OrderByDescending(f => f.CreatedAt)
             .ToListAsync();
 
@@ -92,16 +93,58 @@ public class FeedbackService : IFeedbackService
         return result;
     }
 
+    public async Task<PagedResult<FeedbackDto>> GetAllPagedAsync(int page, int pageSize, string? search = null)
+    {
+        IQueryable<Feedback> query = _feedbackRepo.Query()
+            .Include(f => f.Citizen)
+            .Include(f => f.Complaint)
+            .Where(f => f.Complaint != null && (f.Complaint.Status == ComplaintStatus.Resolved || f.Complaint.Status == ComplaintStatus.Closed));
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var term = search.Trim().ToLower();
+            query = query.Where(f =>
+                (f.Citizen != null && f.Citizen.FullName.ToLower().Contains(term)) ||
+                (f.Complaint != null && f.Complaint.ComplaintNumber.ToLower().Contains(term)));
+        }
+
+        var totalCount = await query.CountAsync();
+
+        var feedbacks = await query
+            .OrderByDescending(f => f.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var items = new List<FeedbackDto>();
+        foreach (var f in feedbacks)
+            items.Add(await MapToDtoAsync(f));
+
+        return new PagedResult<FeedbackDto>
+        {
+            Items = items,
+            TotalCount = totalCount,
+            Page = page,
+            PageSize = pageSize
+        };
+    }
+
     public async Task<double> GetAverageRatingAsync()
     {
-        var all = await _feedbackRepo.Query().ToListAsync();
+        var all = await _feedbackRepo.Query()
+            .Include(f => f.Complaint)
+            .Where(f => f.Complaint != null && (f.Complaint.Status == ComplaintStatus.Resolved || f.Complaint.Status == ComplaintStatus.Closed))
+            .ToListAsync();
         if (all.Count == 0) return 0;
         return all.Average(f => (double)f.Rating);
     }
 
     public async Task<int> GetCountAsync()
     {
-        return await _feedbackRepo.Query().CountAsync();
+        return await _feedbackRepo.Query()
+            .Include(f => f.Complaint)
+            .Where(f => f.Complaint != null && (f.Complaint.Status == ComplaintStatus.Resolved || f.Complaint.Status == ComplaintStatus.Closed))
+            .CountAsync();
     }
 
     private Task<FeedbackDto> MapToDtoAsync(Feedback f)

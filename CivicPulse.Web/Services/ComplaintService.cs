@@ -284,6 +284,7 @@ public class ComplaintService : IComplaintService
             (ComplaintStatus.InProgress, ComplaintStatus.Rejected) => true,
             (ComplaintStatus.Resolved, ComplaintStatus.Closed) => true,
             (ComplaintStatus.Resolved, ComplaintStatus.Reopened) => true,
+            (ComplaintStatus.Closed, ComplaintStatus.Reopened) => true,
             (ComplaintStatus.Reopened, ComplaintStatus.InProgress) => true,
             (ComplaintStatus.Reopened, ComplaintStatus.Rejected) => true,
             _ => false
@@ -298,8 +299,8 @@ public class ComplaintService : IComplaintService
         if (complaint.CitizenId != citizenId)
             throw new UnauthorizedAccessException("You can only reopen your own complaints.");
 
-        if (complaint.Status != ComplaintStatus.Resolved)
-            throw new InvalidOperationException("Only resolved complaints can be reopened.");
+        if (complaint.Status != ComplaintStatus.Resolved && complaint.Status != ComplaintStatus.Closed)
+            throw new InvalidOperationException("Only resolved or closed complaints can be reopened.");
 
         if (complaint.ResolvedAt.HasValue && (DateTime.UtcNow - complaint.ResolvedAt.Value).TotalDays > 7)
             throw new InvalidOperationException("Complaints can only be reopened within 7 days of resolution.");

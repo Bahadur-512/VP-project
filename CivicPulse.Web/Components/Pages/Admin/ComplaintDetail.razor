@@ -118,17 +118,42 @@
     .adcd-audit tr:hover td { background: #F9FAFB; }
     .adcd-audit-action { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; background: #F3F4F6; color: #374151; }
 
-    .adcd-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 16px; }
-    .adcd-modal { background: #fff; border-radius: 14px; width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,.2); }
-    .adcd-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid #F3F4F6; font-size: 15px; font-weight: 700; color: #111827; }
-    .adcd-modal-close { background: none; border: none; font-size: 22px; color: #9CA3AF; cursor: pointer; padding: 0 4px; line-height: 1; }
-    .adcd-modal-close:hover { color: #374151; }
-    .adcd-modal-body { padding: 20px; }
-    .adcd-form-group { margin-bottom: 16px; }
-    .adcd-form-group label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
-    .adcd-select { width: 100%; padding: 8px 12px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 13px; color: #1F2937; background: #fff; }
-    .adcd-textarea { width: 100%; padding: 8px 12px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 13px; color: #1F2937; resize: vertical; min-height: 72px; font-family: inherit; }
-    .adcd-modal-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 20px; border-top: 1px solid #F3F4F6; }
+    .adcd-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 16px; backdrop-filter: blur(2px); }
+    .adcd-modal { background: #fff; border-radius: 12px; width: 100%; max-width: 440px; box-shadow: 0 25px 50px -12px rgba(0,0,0,.25); animation: adcd-modal-in .2s ease-out; }
+    @@keyframes adcd-modal-in { from { opacity:0; transform:scale(.96) translateY(8px); } to { opacity:1; transform:scale(1) translateY(0); } }
+    .adcd-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px; border-bottom: 1px solid #E5E7EB; font-size: 15px; font-weight: 700; color: #111827; }
+    .adcd-modal-close { background: none; border: none; font-size: 22px; color: #9CA3AF; cursor: pointer; padding: 0 4px; line-height: 1; border-radius: 6px; transition: all .15s; }
+    .adcd-modal-close:hover { color: #374151; background: #F3F4F6; }
+    .adcd-modal-body { padding: 22px; }
+    .adcd-form-group { margin-bottom: 18px; }
+    .adcd-form-group:last-child { margin-bottom: 0; }
+    .adcd-form-group label { display: block; font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .03em; }
+    .adcd-status-options { display: flex; flex-direction: column; gap: 6px; }
+    .adcd-status-option { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 2px solid #E5E7EB; border-radius: 10px; cursor: pointer; transition: all .15s; font-size: 13px; font-weight: 600; color: #374151; background: #fff; }
+    .adcd-status-option:hover { border-color: #CBD5E1; background: #F9FAFB; }
+    .adcd-status-option.selected { border-color: #2563EB; background: #EFF6FF; color: #1D4ED8; }
+    .adcd-status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .adcd-status-dot.Pending { background: #F59E0B; }
+    .adcd-status-dot.UnderReview { background: #3B82F6; }
+    .adcd-status-dot.InProgress { background: #6366F1; }
+    .adcd-status-dot.Resolved { background: #10B981; }
+    .adcd-status-dot.Closed { background: #9CA3AF; }
+    .adcd-status-dot.Rejected { background: #EF4444; }
+    .adcd-status-dot.Reopened { background: #F59E0B; }
+    .adcd-status-option .adcd-status-label { flex: 1; }
+    .adcd-status-option .adcd-status-check { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #D1D5DB; display: flex; align-items: center; justify-content: center; transition: all .15s; flex-shrink: 0; }
+    .adcd-status-option.selected .adcd-status-check { border-color: #2563EB; background: #2563EB; }
+    .adcd-status-option.selected .adcd-status-check::after { content: ''; width: 6px; height: 10px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); margin-top: -1px; }
+    .adcd-textarea { width: 100%; padding: 10px 14px; border: 1px solid #E5E7EB; border-radius: 10px; font-size: 13px; color: #1F2937; resize: vertical; min-height: 80px; font-family: inherit; line-height: 1.5; transition: all .15s; background: #fff; }
+    .adcd-textarea::placeholder { color: #9CA3AF; font-size: 13px; }
+    .adcd-textarea:focus { outline: none; border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37,99,235,.15); }
+    .adcd-modal-footer { display: flex; justify-content: flex-end; align-items: center; gap: 10px; padding: 16px 22px; border-top: 1px solid #E5E7EB; }
+    .adcd-btn-cancel { background: transparent; border: 1px solid #E5E7EB; color: #6B7280; padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s; }
+    .adcd-btn-cancel:hover { background: #F9FAFB; color: #374151; border-color: #D1D5DB; }
+    .adcd-btn-update { background: #2563EB; border: none; color: #fff; padding: 8px 20px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all .15s; display: flex; align-items: center; gap: 6px; }
+    .adcd-btn-update:hover { background: #1D4ED8; box-shadow: 0 4px 12px rgba(37,99,235,.3); }
+    .adcd-btn-update:active { transform: scale(.97); }
+    .adcd-btn-update:disabled { opacity: .5; cursor: not-allowed; box-shadow: none; transform: none; }
 .adcd-feedback-section { background:#fff; border-radius:14px; border:1px solid #E2E8F0; overflow:hidden; margin-top:16px; box-shadow:0 1px 4px rgba(0,0,0,.05); }
 .adcd-feedback-header { display:flex; align-items:center; gap:8px; padding:14px 20px; border-bottom:1px solid #F1F5F9; font-size:.875rem; font-weight:700; color:#1A202C; }
 .adcd-feedback-header svg { color:#F59E0B; flex-shrink:0; }
@@ -216,7 +241,7 @@
                         <h2 class="adcd-title">@Complaint.Title</h2>
                         <p class="adcd-desc">@Complaint.Description</p>
                         <div class="adcd-actions">
-                            <button class="adcd-btn adcd-btn-primary" @onclick="() => ShowStatusModal = true">
+                            <button class="adcd-btn adcd-btn-primary" @onclick="OpenStatusModal">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
                                     <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
                                 </svg>
@@ -516,30 +541,43 @@
         <div class="adcd-modal-overlay" @onclick="() => ShowStatusModal = false">
             <div class="adcd-modal" @onclick:stopPropagation>
                 <div class="adcd-modal-header">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" width="16" height="16">
+                        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
                     <span>Update Status</span>
                     <button class="adcd-modal-close" @onclick="() => ShowStatusModal = false">&times;</button>
                 </div>
                 <div class="adcd-modal-body">
                     <div class="adcd-form-group">
                         <label>New Status</label>
-                        <select class="adcd-select" @bind="NewStatus">
+                        <div class="adcd-status-options">
                             @foreach (var s in Enum.GetValues<ComplaintStatus>())
                             {
                                 @if (IsValidTransition(Complaint!.Status, s))
                                 {
-                                    <option value="@((int)s)">@s</option>
+                                    var selected = NewStatus == s;
+                                    <div class="adcd-status-option @(selected ? "selected" : "")" @onclick="() => NewStatus = s">
+                                        <span class="adcd-status-dot @s"></span>
+                                        <span class="adcd-status-label">@GetStatusLabel(s)</span>
+                                        <span class="adcd-status-check"></span>
+                                    </div>
                                 }
                             }
-                        </select>
+                        </div>
                     </div>
                     <div class="adcd-form-group">
                         <label>Note</label>
-                        <textarea class="adcd-textarea" @bind="StatusNote" placeholder="Add a note about this change..."></textarea>
+                        <textarea class="adcd-textarea" @bind="StatusNote" placeholder="Add a note about this change..." maxlength="500"></textarea>
                     </div>
                 </div>
                 <div class="adcd-modal-footer">
-                    <button class="adcd-btn adcd-btn-ghost" @onclick="() => ShowStatusModal = false">Cancel</button>
-                    <button class="adcd-btn adcd-btn-primary" @onclick="UpdateStatus">Update</button>
+                    <button class="adcd-btn-cancel" @onclick="() => ShowStatusModal = false">Cancel</button>
+                    <button class="adcd-btn-update" @onclick="UpdateStatus" disabled="@(!IsValidTransition(Complaint?.Status ?? ComplaintStatus.Pending, NewStatus))">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        Update
+                    </button>
                 </div>
             </div>
         </div>
@@ -610,6 +648,24 @@
             _ => false
         };
     }
+
+    private void OpenStatusModal()
+    {
+        NewStatus = Enum.GetValues<ComplaintStatus>().FirstOrDefault(s => s != Complaint?.Status && IsValidTransition(Complaint?.Status ?? ComplaintStatus.Pending, s));
+        ShowStatusModal = true;
+    }
+
+    private string GetStatusLabel(ComplaintStatus s) => s switch
+    {
+        ComplaintStatus.Pending => "Pending",
+        ComplaintStatus.UnderReview => "Under Review",
+        ComplaintStatus.InProgress => "In Progress",
+        ComplaintStatus.Resolved => "Resolved",
+        ComplaintStatus.Closed => "Closed",
+        ComplaintStatus.Rejected => "Rejected",
+        ComplaintStatus.Reopened => "Reopened",
+        _ => s.ToString()
+    };
 
     private async Task UpdateStatus()
     {
