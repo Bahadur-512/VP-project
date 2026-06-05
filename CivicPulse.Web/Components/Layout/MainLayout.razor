@@ -71,7 +71,7 @@
 
         if (IsAuthenticated)
         {
-            IsAdmin = user.HasClaim("role", "Admin") || user.HasClaim("role", "SuperAdmin");
+            IsAdmin = user.HasClaim("role", "Admin");
             FullName = user.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value ?? "";
             var userIdClaim = user.FindFirst("userId")?.Value;
             UserId = userIdClaim != null ? int.Parse(userIdClaim) : 0;

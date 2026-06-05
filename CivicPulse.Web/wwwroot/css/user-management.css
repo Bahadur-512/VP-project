@@ -49,7 +49,6 @@
 .um-role-badge { font-size:0.72rem; font-weight:700; padding:4px 10px; border-radius:20px; white-space:nowrap; }
 .um-role-citizen    { background:#EFF6FF; color:#1D4ED8; }
 .um-role-admin      { background:#EDE9FE; color:#5B21B6; }
-.um-role-superadmin { background:#F3E8FF; color:#7C3AED; }
 
 /* Status */
 .um-status-badge { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:20px; font-size:0.72rem; font-weight:700; white-space:nowrap; }
