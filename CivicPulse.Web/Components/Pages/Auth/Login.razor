@@ -48,8 +48,8 @@
                     <div class="auth-tab" @onclick="GoToRegisterTab">@Loc.Get("nav.register", CurrentLang)</div>
                 </div>
 
-                <div class="auth-title">@Loc.Get("login.title", CurrentLang)</div>
-                <div class="auth-subtitle">@Loc.Get("login.subtitle", CurrentLang)</div>
+                <div class="auth-title">Welcome Back</div>
+                <div class="auth-subtitle">Sign in to your Civic Pulse account to manage your profile and track complaints.</div>
 
                 @if (!string.IsNullOrEmpty(Error))
                 {
@@ -77,9 +77,9 @@
                     <div class="auth-flex auth-flex-center auth-flex-between">
                         <label class="auth-flex auth-flex-center auth-gap-sm" style="cursor:pointer;font-size:13px;color:var(--cp-text-secondary);font-weight:600">
                             <input id="rememberMe" type="checkbox" @bind="RememberMe" />
-                            @Loc.Get("form.remember", CurrentLang)
+                            Remember me
                         </label>
-                        <a href="/forgot-password" style="font-size:12px;font-weight:600;color:var(--cp-accent)">@Loc.Get("login.forgot", CurrentLang)</a>
+                        <a href="/forgot-password" style="font-size:12px;font-weight:600;color:var(--cp-accent)">Forgot password?</a>
                     </div>
                 </div>
 
@@ -110,8 +110,8 @@
                     <div class="auth-tab active" @onclick="GoToRegisterTab">@Loc.Get("nav.register", CurrentLang)</div>
                 </div>
 
-                <div class="auth-title">@Loc.Get("register.title", CurrentLang)</div>
-                <div class="auth-subtitle">@Loc.Get("register.subtitle", CurrentLang)</div>
+                <div class="auth-title">Create an Account</div>
+                <div class="auth-subtitle">Join Civic Pulse to report community issues and track resolutions in real time.</div>
 
                 @if (!string.IsNullOrEmpty(RegError))
                 {
@@ -119,7 +119,7 @@
                 }
 
                 <div class="auth-form-group">
-                    <label class="auth-label" for="regFullName">@Loc.Get("form.fullname", CurrentLang)</label>
+                    <label class="auth-label" for="regFullName">Full Name</label>
                     <div class="auth-input-wrapper">
                         <i class="bi bi-person auth-input-icon"></i>
                         <input id="regFullName" type="text" placeholder="John Doe" required autocomplete="name" @bind="RegFullName" />

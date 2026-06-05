@@ -62,36 +62,25 @@
 
     <!-- FILTER BAR -->
     <div class="al-filter-bar">
-        <div class="al-select-wrap">
-            <svg class="al-select-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
-            </svg>
-            <select class="al-select" @bind="filter.Action" @bind:after="ApplyFilter">
-                <option value="">All Actions</option>
-                <option value="STATUS_CHANGED">Status Changes</option>
-                <option value="COMPLAINT_CREATED">Complaint Created</option>
-                <option value="COMPLAINT_UPDATED">Complaint Updated</option>
-                <option value="USER_STATUS_TOGGLED">User Status Toggle</option>
-                <option value="PASSWORD_RESET">Password Reset</option>
-                <option value="USER_CREATED">User Created</option>
-            </select>
-        </div>
+        <FilterDropdown Open="@_actionOpen"
+                        OpenChanged="(bool v) => _actionOpen = v"
+                        Placeholder="All Actions"
+                        AllLabel="All Actions"
+                        SelectedValue="@filter.Action"
+                        SelectedLabel="@GetActionDisplayLabel(filter.Action)"
+                        Options="@ActionOptions"
+                        OnSelectionChanged="OnActionChanged"
+                        IconSvg="<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' width='13' height='13'><polygon points='22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3'/></svg>" />
 
-        <div class="al-select-wrap">
-            <svg class="al-select-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-                <rect x="2" y="3" width="9" height="9" rx="1"/>
-                <rect x="13" y="3" width="9" height="9" rx="1"/>
-                <rect x="2" y="14" width="9" height="9" rx="1"/>
-                <rect x="13" y="14" width="9" height="9" rx="1"/>
-            </svg>
-            <select class="al-select" @bind="filter.EntityType" @bind:after="ApplyFilter">
-                <option value="">All Entities</option>
-                <option value="Complaint">Complaint</option>
-                <option value="User">User</option>
-                <option value="Category">Category</option>
-                <option value="System">System</option>
-            </select>
-        </div>
+        <FilterDropdown Open="@_entityOpen"
+                        OpenChanged="(bool v) => _entityOpen = v"
+                        Placeholder="All Entities"
+                        AllLabel="All Entities"
+                        SelectedValue="@filter.EntityType"
+                        SelectedLabel="@filter.EntityType"
+                        Options="@EntityOptions"
+                        OnSelectionChanged="OnEntityChanged"
+                        IconSvg="<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' width='13' height='13'><rect x='2' y='3' width='9' height='9' rx='1'/><rect x='13' y='3' width='9' height='9' rx='1'/><rect x='2' y='14' width='9' height='9' rx='1'/><rect x='13' y='14' width='9' height='9' rx='1'/></svg>" />
 
         <div class="al-date-wrap">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="color:#9CA3AF;flex-shrink:0">
@@ -197,14 +186,18 @@
                                 {
                                     <div class="al-diff-block al-diff-old">
                                         <span class="al-diff-label">Before</span>
-                                        <pre class="al-diff-code">@FormatJson(log.OldValues)</pre>
+                                        <div class="al-diff-entries">
+                                            @RenderJsonEntries(log.OldValues)
+                                        </div>
                                     </div>
                                 }
                                 @if (!string.IsNullOrEmpty(log.NewValues))
                                 {
                                     <div class="al-diff-block al-diff-new">
                                         <span class="al-diff-label">After</span>
-                                        <pre class="al-diff-code">@FormatJson(log.NewValues)</pre>
+                                        <div class="al-diff-entries">
+                                            @RenderJsonEntries(log.NewValues)
+                                        </div>
                                     </div>
                                 }
                             </div>
@@ -261,6 +254,49 @@
     private int? expandedLogId;
     private bool isLoading = true;
     private string CurrentLang = "en";
+    private bool _actionOpen;
+    private bool _entityOpen;
+
+    private List<DropdownOption> ActionOptions = new()
+    {
+        new() { Value = "STATUS_CHANGED",    Label = "Status Changes",      Color = "#3B82F6" },
+        new() { Value = "COMPLAINT_CREATED", Label = "Complaint Created",   Color = "#16A34A" },
+        new() { Value = "COMPLAINT_UPDATED", Label = "Complaint Updated",   Color = "#D97706" },
+        new() { Value = "USER_STATUS_TOGGLED", Label = "User Status Toggle", Color = "#9333EA" },
+        new() { Value = "PASSWORD_RESET",    Label = "Password Reset",      Color = "#DC2626" },
+        new() { Value = "USER_CREATED",      Label = "User Created",        Color = "#0891B2" },
+    };
+
+    private List<DropdownOption> EntityOptions = new()
+    {
+        new() { Value = "Complaint", Label = "Complaint", Color = "#3B82F6" },
+        new() { Value = "User",      Label = "User",      Color = "#16A34A" },
+        new() { Value = "Category",  Label = "Category",  Color = "#D97706" },
+        new() { Value = "System",    Label = "System",    Color = "#9333EA" },
+    };
+
+    private string GetActionDisplayLabel(string? action) => action switch
+    {
+        "STATUS_CHANGED"       => "Status Changes",
+        "COMPLAINT_CREATED"    => "Complaint Created",
+        "COMPLAINT_UPDATED"    => "Complaint Updated",
+        "USER_STATUS_TOGGLED"  => "User Status Toggle",
+        "PASSWORD_RESET"       => "Password Reset",
+        "USER_CREATED"         => "User Created",
+        _ => ""
+    };
+
+    private async Task OnActionChanged(string? value)
+    {
+        filter.Action = value;
+        await ApplyFilter();
+    }
+
+    private async Task OnEntityChanged(string? value)
+    {
+        filter.EntityType = value;
+        await ApplyFilter();
+    }
 
     private List<AuditLogDto> logs => result.Items;
     private int totalCount => result.TotalCount;
@@ -314,16 +350,86 @@
     private void ToggleExpand(int id) =>
         expandedLogId = expandedLogId == id ? null : id;
 
-    private string FormatJson(string json)
+    private MarkupString RenderJsonEntries(string json)
     {
-        if (string.IsNullOrEmpty(json)) return "";
+        if (string.IsNullOrEmpty(json)) return new MarkupString("");
+
+        // Attempt 1: Direct dictionary parse (single-serialized data)
+        var dict = TryParseDict(json);
+        if (dict != null) return BuildEntriesHtml(dict);
+
+        // Attempt 2: Double-serialized — outer value is a JSON-encoded string
+        // Deserialize as string first to handle \u0022 unicode escapes
         try
         {
-            var obj = System.Text.Json.JsonSerializer.Deserialize<object>(json);
-            return System.Text.Json.JsonSerializer.Serialize(obj,
-                new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+            var unescaped = System.Text.Json.JsonSerializer.Deserialize<string>(json);
+            if (!string.IsNullOrEmpty(unescaped))
+            {
+                dict = TryParseDict(unescaped);
+                if (dict != null) return BuildEntriesHtml(dict);
+
+                // Inner value is still JSON-ish but not a flat object — show pretty fallback
+                return new MarkupString($"<span class=\"al-diff-plain\">{System.Net.WebUtility.HtmlEncode(unescaped)}</span>");
+            }
         }
-        catch { return json; }
+        catch { }
+
+        // Final fallback: show raw string
+        return new MarkupString($"<span class=\"al-diff-plain\">{System.Net.WebUtility.HtmlEncode(json)}</span>");
+    }
+
+    private static Dictionary<string, System.Text.Json.JsonElement>? TryParseDict(string json)
+    {
+        try
+        {
+            var dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, System.Text.Json.JsonElement>>(json);
+            return dict?.Count > 0 ? dict : null;
+        }
+        catch { return null; }
+    }
+
+    private MarkupString BuildEntriesHtml(Dictionary<string, System.Text.Json.JsonElement> dict)
+    {
+        var html = new System.Text.StringBuilder();
+        foreach (var kvp in dict)
+        {
+            var key = FormatKeyName(kvp.Key);
+            var val = ExtractJsonValue(kvp.Value);
+            html.Append("<div class=\"al-diff-row\">");
+            html.Append($"<span class=\"al-diff-prop\">{System.Net.WebUtility.HtmlEncode(key)}</span>");
+            html.Append($"<span class=\"al-diff-val\">{System.Net.WebUtility.HtmlEncode(val)}</span>");
+            html.Append("</div>");
+        }
+        return new MarkupString(html.ToString());
+    }
+
+    private static string ExtractJsonValue(System.Text.Json.JsonElement element) => element.ValueKind switch
+    {
+        System.Text.Json.JsonValueKind.String => element.GetString() ?? "",
+        System.Text.Json.JsonValueKind.Number => element.GetRawText(),
+        System.Text.Json.JsonValueKind.True => "true",
+        System.Text.Json.JsonValueKind.False => "false",
+        System.Text.Json.JsonValueKind.Null => "—",
+        _ => element.GetRawText()
+    };
+
+    private static string FormatKeyName(string key)
+    {
+        if (string.IsNullOrEmpty(key)) return key;
+        var sb = new System.Text.StringBuilder();
+        for (int i = 0; i < key.Length; i++)
+        {
+            if (i == 0)
+                sb.Append(char.ToUpper(key[i]));
+            else if (char.IsUpper(key[i]) && i > 0)
+            {
+                sb.Append(' ');
+                sb.Append(key[i]);
+            }
+            else
+                sb.Append(key[i]);
+        }
+        return sb.ToString();
     }
 
     private async Task ExportLog()

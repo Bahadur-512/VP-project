@@ -31,7 +31,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("AdminOnly", p => p.RequireClaim("role", "Admin", "SuperAdmin"));
+    options.AddPolicy("AdminOnly", p => p.RequireClaim("role", "Admin"));
     options.AddPolicy("CitizenOnly", p => p.RequireClaim("role", "Citizen"));
     options.AddPolicy("AuthenticatedUser", p => p.RequireAuthenticatedUser());
 });
@@ -51,6 +51,8 @@ builder.Services.AddScoped<IAttachmentService, AttachmentService>();
 builder.Services.AddScoped<ISlaService, SlaService>();
 builder.Services.AddScoped<LocalizationService>();
 builder.Services.AddScoped<CategorizationEngine>();
+builder.Services.AddHttpClient<AiCategorizationService>();
+builder.Services.AddScoped<AiCategorizationService>();
 builder.Services.AddHostedService<SlaMonitoringService>();
 builder.Services.AddHostedService<DatabaseSeedService>();
 builder.Services.AddHttpContextAccessor();
@@ -93,7 +95,7 @@ app.MapPost("/api/auth/login", async (HttpContext context, IUserService userServ
         var role = principal.FindFirst("role")?.Value;
         var redirect = role switch
         {
-            "Admin" or "SuperAdmin" => "/admin/dashboard",
+            "Admin" => "/admin/dashboard",
             "Citizen" => "/citizen/dashboard",
             _ => "/dashboard"
         };

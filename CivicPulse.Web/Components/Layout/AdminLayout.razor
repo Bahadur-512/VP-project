@@ -110,6 +110,14 @@
                 @if (!collapsed) { <span>Categories</span> }
             </NavLink>
 
+            <NavLink href="/admin/feedback" class="admin-nav-item" Match="NavLinkMatch.All">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                    <line x1="9" y1="10" x2="15" y2="10"/>
+                </svg>
+                @if (!collapsed) { <span>Feedback</span> }
+            </NavLink>
+
             @if (!collapsed) { <span class="admin-nav-section">System</span> }
 
             <NavLink href="/admin/audit" class="admin-nav-item" Match="NavLinkMatch.All">
@@ -193,7 +201,7 @@
         }
 
         var role = user.FindFirst("role")?.Value ?? "";
-        if (role != "Admin" && role != "SuperAdmin")
+        if (role != "Admin")
         {
             Navigation.NavigateTo("/citizen/dashboard", replace: true);
             return;

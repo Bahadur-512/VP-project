@@ -161,27 +161,87 @@
             </div>
         </div>
 
-        <div class="ad-card ad-feedback-card">
+        <div class="ad-nav-grid">
+            <a href="/admin/complaints" class="ad-nav-card">
+                <div class="ad-nav-icon" style="background:#EFF6FF;color:#1B3A6B">
+                    <i class="bi bi-clipboard2-data-fill"></i>
+                </div>
+                <div class="ad-nav-body">
+                    <span class="ad-nav-title">Manage Complaints</span>
+                    <span class="ad-nav-desc">View and manage all citizen complaints</span>
+                </div>
+                <i class="bi bi-chevron-right ad-nav-arrow"></i>
+            </a>
+            <a href="/admin/sla" class="ad-nav-card">
+                <div class="ad-nav-icon" style="background:#FEF2F2;color:#DC2626">
+                    <i class="bi bi-alarm-fill"></i>
+                </div>
+                <div class="ad-nav-body">
+                    <span class="ad-nav-title">SLA Tracking</span>
+                    <span class="ad-nav-desc">Monitor service level agreements</span>
+                </div>
+                <i class="bi bi-chevron-right ad-nav-arrow"></i>
+            </a>
+            <a href="/admin/users" class="ad-nav-card">
+                <div class="ad-nav-icon" style="background:#F0FDF4;color:#16A34A">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div class="ad-nav-body">
+                    <span class="ad-nav-title">User Management</span>
+                    <span class="ad-nav-desc">Manage citizens and staff accounts</span>
+                </div>
+                <i class="bi bi-chevron-right ad-nav-arrow"></i>
+            </a>
+            <a href="/admin/categories" class="ad-nav-card">
+                <div class="ad-nav-icon" style="background:#F5F3FF;color:#7C3AED">
+                    <i class="bi bi-tags-fill"></i>
+                </div>
+                <div class="ad-nav-body">
+                    <span class="ad-nav-title">Categories</span>
+                    <span class="ad-nav-desc">Configure complaint categories</span>
+                </div>
+                <i class="bi bi-chevron-right ad-nav-arrow"></i>
+            </a>
+            <a href="/admin/feedback" class="ad-nav-card">
+                <div class="ad-nav-icon" style="background:#FFFBEB;color:#D97706">
+                    <i class="bi bi-chat-square-text-fill"></i>
+                </div>
+                <div class="ad-nav-body">
+                    <span class="ad-nav-title">Feedback Management</span>
+                    <span class="ad-nav-desc">View citizen ratings and comments</span>
+                </div>
+                <i class="bi bi-chevron-right ad-nav-arrow"></i>
+            </a>
+            <a href="/admin/audit" class="ad-nav-card">
+                <div class="ad-nav-icon" style="background:#F1F5F9;color:#475569">
+                    <i class="bi bi-journal-text"></i>
+                </div>
+                <div class="ad-nav-body">
+                    <span class="ad-nav-title">Audit Log</span>
+                    <span class="ad-nav-desc">Track all system activities</span>
+                </div>
+                <i class="bi bi-chevron-right ad-nav-arrow"></i>
+            </a>
+        </div>
+
+        <div class="ad-card ad-feedback-overview">
             <div class="ad-card-header">
                 <h2 class="ad-card-title">
-                    <i class="bi bi-chat-square-text-fill"></i>
-                    User Feedbacks
+                    <i class="bi bi-star-fill" style="color:#F59E0B"></i>
+                    Recent Feedbacks
                 </h2>
-                <div class="ad-feedback-search">
-                    <i class="bi bi-search"></i>
-                    <input type="text" placeholder="Search by complaint ID or citizen name..." value="@FeedbackSearch" @oninput="OnFeedbackSearchChanged" />
-                </div>
+                <a href="/admin/feedback" class="ad-view-all">View All →</a>
             </div>
             @if (!FeedbackItems.Any())
             {
                 <div class="ad-empty-small">
                     <i class="bi bi-chat-square-text" style="color:#94A3B8;font-size:1.8rem"></i>
-                    <p>No feedback submissions yet.</p>
-                </div>
-            }
-            else
-            {
-                <div class="ad-feedback-table-wrap">
+                <p>No feedback available for resolved complaints.</p>
+            </div>
+        }
+        else
+        {
+            <div class="ad-feedback-table-wrap">
                     <table class="ad-feedback-table">
                         <thead>
                             <tr>
@@ -193,7 +253,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var fb in FeedbackItems)
+                            @foreach (var fb in FeedbackItems.Take(5))
                             {
                                 <tr class="ad-feedback-row" @onclick="() => NavigateToComplaint(fb.ComplaintId)">
                                     <td><span class="ad-fb-citizen">@fb.CitizenName</span></td>
@@ -219,23 +279,6 @@
                             }
                         </tbody>
                     </table>
-                </div>
-                <div class="ad-feedback-pagination">
-                    <span class="ad-fb-page-info">
-                        Showing @((FeedbackPage - 1) * FeedbackPageSize + 1)-@Math.Min(FeedbackPage * FeedbackPageSize, FeedbackTotal) of @FeedbackTotal
-                    </span>
-                    <div class="ad-fb-page-controls">
-                        <button class="ad-fb-page-btn" disabled="@(FeedbackPage <= 1)" @onclick="() => GoToFeedbackPage(FeedbackPage - 1)">
-                            <i class="bi bi-chevron-left"></i> Prev
-                        </button>
-                        @for (int p = Math.Max(1, FeedbackPage - 2); p <= Math.Min(FeedbackTotalPages, FeedbackPage + 2); p++)
-                        {
-                            <button class="ad-fb-page-btn @(p == FeedbackPage ? "active" : "")" @onclick="() => GoToFeedbackPage(p)">@p</button>
-                        }
-                        <button class="ad-fb-page-btn" disabled="@(FeedbackPage >= FeedbackTotalPages)" @onclick="() => GoToFeedbackPage(FeedbackPage + 1)">
-                            Next <i class="bi bi-chevron-right"></i>
-                        </button>
-                    </div>
                 </div>
             }
         </div>
@@ -338,12 +381,6 @@
     private List<MonthlyTrendDto> MonthlyTrend = new();
     private List<PriorityDistributionDto> PriorityDist = new();
     private List<FeedbackDto> FeedbackItems = new();
-    private int FeedbackPage = 1;
-    private int FeedbackPageSize = 10;
-    private int FeedbackTotal;
-    private int FeedbackTotalPages => (int)Math.Ceiling(FeedbackTotal / (double)FeedbackPageSize);
-    private string FeedbackSearch = "";
-    private Timer? FeedbackSearchTimer;
     private bool IsLoading = true;
     private string CurrentLang = "en";
 
@@ -441,23 +478,8 @@
 
     private async Task LoadFeedbackAsync()
     {
-        var result = await FeedbackService.GetAllPagedAsync(FeedbackPage, FeedbackPageSize,
-            string.IsNullOrWhiteSpace(FeedbackSearch) ? null : FeedbackSearch);
+        var result = await FeedbackService.GetAllPagedAsync(1, 5);
         FeedbackItems = result.Items;
-        FeedbackTotal = result.TotalCount;
-    }
-
-    private async Task OnFeedbackSearchChanged(ChangeEventArgs e)
-    {
-        FeedbackSearch = e.Value?.ToString() ?? "";
-        FeedbackPage = 1;
-        await LoadFeedbackAsync();
-    }
-
-    private async Task GoToFeedbackPage(int page)
-    {
-        FeedbackPage = page;
-        await LoadFeedbackAsync();
     }
 
     public async ValueTask DisposeAsync()

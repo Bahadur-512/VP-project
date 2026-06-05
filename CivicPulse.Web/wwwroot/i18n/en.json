@@ -25,6 +25,7 @@
   "nav.admin.users": "User Management",
   "nav.admin.categories": "Categories",
   "nav.admin.audit": "Audit Log",
+  "nav.admin.feedback": "Feedback Management",
   "chart.status": "Complaints by Status",
   "chart.monthly": "Monthly Trend",
   "chart.categories": "Top Categories",

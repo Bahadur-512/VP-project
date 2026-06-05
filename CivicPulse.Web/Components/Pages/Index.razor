@@ -13,7 +13,7 @@
         {
             var role = user.FindFirst("role")?.Value ?? "";
 
-            if (role == "Admin" || role == "SuperAdmin")
+            if (role == "Admin")
                 Navigation.NavigateTo("/admin/dashboard", replace: true);
             else
                 Navigation.NavigateTo("/citizen/dashboard", replace: true);

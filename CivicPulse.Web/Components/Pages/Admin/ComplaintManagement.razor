@@ -63,6 +63,7 @@
     .ac-status-rejected .ac-status-dot { background:#EF4444; }
     .ac-status-reopened { background:#F3E8FF; color:#7C3AED; }
     .ac-status-reopened .ac-status-dot { background:#A855F7; }
+    .ac-urgency-badge { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:4px; font-size:.68rem; font-weight:700; background:#FFF7ED; color:#C2410C; border:1px solid #FED7AA; margin-left:6px; }
     .ac-priority-chip { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:6px; font-size:.73rem; font-weight:700; }
     .ac-priority-critical { background:#FEE2E2; color:#991B1B; }
     .ac-priority-high { background:#FFEDD5; color:#C2410C; }
@@ -222,10 +223,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var c in Result.Items)
+                    @foreach (var c in SortedItems)
                     {
                         <tr>
-                            <td><a href="/admin/complaints/@c.Id" class="ac-complaint-num">@c.ComplaintNumber</a></td>
+                            <td>
+                                @if (c.Status.ToString() == "Reopened")
+                                {
+                                    <span class="ac-urgency-badge">⚠ Urgent</span>
+                                }
+                                <a href="/admin/complaints/@c.Id" class="ac-complaint-num">@c.ComplaintNumber</a>
+                            </td>
                             <td><span class="ac-title-cell" title="@c.Title">@c.Title</span></td>
                             <td style="font-size:.8rem;color:#64748B;">@c.CitizenName</td>
                             <td>
@@ -298,6 +305,8 @@
     private int CurrentPage = 1;
     private bool IsLoading = true;
     private string CurrentLang = "en";
+    private IEnumerable<ComplaintDto> SortedItems =>
+        (Result.Items ?? Enumerable.Empty<ComplaintDto>()).OrderByDescending(c => c.Status.ToString() == "Reopened" ? 1 : 0);
     private bool _statusOpen;
     private bool _categoryOpen;
     private bool _priorityOpen;

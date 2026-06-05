@@ -34,6 +34,7 @@ public class DatabaseSeedService : IHostedService
         if (!db.Users.Any()) await SeedUsersAsync(db);
         if (!db.SlaConfigs.Any()) await SeedSlaConfigsAsync(db);
         if (!db.Complaints.Any()) await SeedSampleComplaintsAsync(db);
+        if (!db.Feedbacks.Any()) await SeedSampleFeedbackAsync(db);
 
         _logger.LogInformation("Database seeded successfully.");
     }
@@ -67,7 +68,7 @@ public class DatabaseSeedService : IHostedService
             FullName = "System Admin",
             Email = _configuration["AppSettings:DefaultAdminEmail"] ?? "admin@civicpulse.pk",
             PasswordHash = PasswordHelper.HashPassword(_configuration["AppSettings:DefaultAdminPassword"] ?? "Admin@123!"),
-            Role = UserRole.SuperAdmin,
+            Role = UserRole.Admin,
             IsActive = true,
             IsEmailVerified = true,
             PreferredLanguage = "en"
@@ -245,6 +246,48 @@ public class DatabaseSeedService : IHostedService
         }
 
         db.StatusHistories.AddRange(statusHistories);
+        await db.SaveChangesAsync();
+    }
+
+    private async Task SeedSampleFeedbackAsync(AppDbContext db)
+    {
+        var citizen = await db.Users.FirstAsync(u => u.Email == "citizen@demo.pk");
+        var resolvedComplaints = await db.Complaints
+            .Where(c => c.Status >= ComplaintStatus.Resolved)
+            .ToListAsync();
+
+        var rng = new Random(99);
+        var feedbackEntries = new List<Feedback>();
+        var sampleComments = new[]
+        {
+            "Very satisfied with the quick response!",
+            "Good work but could be faster.",
+            "The issue was resolved satisfactorily.",
+            "Excellent service, thank you!",
+            "Decent response time, problem fixed.",
+            "Happy with the outcome overall.",
+            "Could improve communication, but work done well.",
+            "Great job! Keep it up.",
+            "Average experience, expected faster service.",
+            "Very professional team, appreciated."
+        };
+
+        foreach (var complaint in resolvedComplaints)
+        {
+            var rating = rng.Next(2, 6);
+            feedbackEntries.Add(new Feedback
+            {
+                ComplaintId = complaint.Id,
+                CitizenId = citizen.Id,
+                Rating = rating,
+                Comment = sampleComments[rng.Next(sampleComments.Length)],
+                WasResolutionSatisfactory = rating >= 3,
+                WasResponseTimely = rating >= 3,
+                CreatedAt = complaint.ResolvedAt ?? complaint.UpdatedAt
+            });
+        }
+
+        db.Feedbacks.AddRange(feedbackEntries);
         await db.SaveChangesAsync();
     }
 

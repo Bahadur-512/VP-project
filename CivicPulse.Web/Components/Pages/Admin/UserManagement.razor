@@ -44,7 +44,7 @@
             <span class="um-stat-label">Disabled</span>
         </div>
         <div class="um-stat">
-            <span class="um-stat-num" style="color:#7C3AED">@users.Count(u => u.Role == UserRole.Admin || u.Role == UserRole.SuperAdmin)</span>
+            <span class="um-stat-num" style="color:#1B3A6B">@users.Count(u => u.Role == UserRole.Admin)</span>
             <span class="um-stat-label">Admins</span>
         </div>
         <div class="um-stat">
@@ -300,7 +300,6 @@
     {
         new() { Value = "Citizen", Label = "Citizen", Color = "#0891B2" },
         new() { Value = "Admin", Label = "Admin", Color = "#1B3A6B" },
-        new() { Value = "SuperAdmin", Label = "Super Admin", Color = "#7C3AED" },
     };
 
     private List<DropdownOption> StatusFilterOptions { get; set; } = new()
@@ -412,7 +411,6 @@
 
     private string GetRoleLabel(UserRole role) => role switch
     {
-        UserRole.SuperAdmin => "Super Admin",
         UserRole.Admin => "Admin",
         UserRole.Citizen => "Citizen",
         _ => role.ToString()
@@ -420,7 +418,6 @@
 
     private string GetRoleColor(UserRole role) => role switch
     {
-        UserRole.SuperAdmin => "#7C3AED",
         UserRole.Admin => "#1B3A6B",
         UserRole.Citizen => "#0891B2",
         _ => "#6B7280"

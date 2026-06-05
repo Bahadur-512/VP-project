@@ -156,12 +156,14 @@
 }
 .al-diff-old .al-diff-label { color:#991B1B; background:#FEE2E2; }
 .al-diff-new .al-diff-label { color:#065F46; background:#D1FAE5; }
-.al-diff-code {
-    font-family:'JetBrains Mono','Courier New',monospace;
-    font-size:0.72rem; padding:10px; margin:0;
-    white-space:pre-wrap; word-break:break-all;
-    max-height:150px; overflow-y:auto; color:#374151;
-}
+.al-diff-entries { padding:8px 10px; display:flex; flex-direction:column; gap:4px; }
+.al-diff-row { display:flex; align-items:baseline; gap:8px; padding:3px 0; }
+.al-diff-row + .al-diff-row { border-top:1px solid rgba(0,0,0,0.04); }
+.al-diff-prop { font-size:0.72rem; font-weight:700; color:#6B7280; text-transform:uppercase; letter-spacing:0.3px; min-width:80px; flex-shrink:0; }
+.al-diff-val { font-size:0.8rem; font-weight:600; color:#1F2937; word-break:break-word; }
+.al-diff-old .al-diff-val { color:#991B1B; }
+.al-diff-new .al-diff-val { color:#065F46; }
+.al-diff-plain { font-size:0.78rem; color:#6B7280; display:block; padding:8px 10px; }
 
 .al-log-time {
     display:flex; flex-direction:column;

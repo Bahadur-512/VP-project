@@ -10,3 +10,4 @@ wwwroot/uploads/
 Thumbs.db
 
 *.db*
+*credentials.json

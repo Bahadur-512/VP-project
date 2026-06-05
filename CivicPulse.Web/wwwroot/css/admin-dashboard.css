@@ -286,6 +286,71 @@
 .ad-fb-page-btn.active { background: #1B3A6B; border-color: #1B3A6B; color: #fff; }
 .ad-fb-page-btn:disabled { opacity: 0.4; cursor: default; }
 
+/* ─── Quick Nav Cards ─── */
+.ad-nav-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.ad-nav-card {
+    background: #fff;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all .15s;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+    text-decoration: none;
+}
+.ad-nav-card:hover {
+    border-color: #1B3A6B;
+    box-shadow: 0 4px 12px rgba(27,58,107,.12);
+    transform: translateY(-2px);
+}
+.ad-nav-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+.ad-nav-body { flex: 1; }
+.ad-nav-title {
+    display: block;
+    font-size: .9rem;
+    font-weight: 700;
+    color: #1A202C;
+    margin-bottom: 2px;
+}
+.ad-nav-desc {
+    display: block;
+    font-size: .75rem;
+    color: #64748B;
+}
+.ad-nav-arrow {
+    color: #CBD5E1;
+    font-size: .8rem;
+    transition: all .15s;
+}
+.ad-nav-card:hover .ad-nav-arrow { color: #1B3A6B; transform: translateX(3px); }
+
+/* ─── Feedback Overview Card (compact) ─── */
+.ad-feedback-overview .ad-feedback-table-wrap { max-height: 280px; overflow-y: auto; }
+
+@media (max-width: 900px) {
+    .ad-nav-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+    .ad-nav-grid { grid-template-columns: 1fr; }
+}
+
 /* ─── Responsive ─── */
 @media (max-width: 1200px) {
     .ad-stats-grid { grid-template-columns: repeat(3, 1fr); }

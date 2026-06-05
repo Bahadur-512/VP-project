@@ -193,7 +193,7 @@
                 }
 
                 <!-- Reopen Button -->
-                @if (complaint.Status == ComplaintStatus.Resolved && CanReopen)
+                @if ((complaint.Status == ComplaintStatus.Resolved || complaint.Status == ComplaintStatus.Closed) && CanReopen)
                 {
                     <div class="cdet-card cdet-reopen-card">
                         <div class="cdet-card-body">
@@ -305,11 +305,11 @@
             </div>
             <div class="cp-form-group">
                 <label class="cp-form-label">Reason for reopening</label>
-                <textarea class="cp-textarea" @bind="ReopenReason" placeholder="Why are you reopening this complaint..." maxlength="500"></textarea>
+                <textarea class="cp-textarea" @bind-value="ReopenReason" @bind-value:event="oninput" placeholder="Why are you reopening this complaint..." maxlength="500"></textarea>
             </div>
             <div class="cp-modal-footer">
                 <button class="cp-btn cp-btn-secondary" @onclick="() => ShowReopenModal = false">Cancel</button>
-                <button class="cp-btn cp-btn-primary" @onclick="ReopenComplaint" disabled="string.IsNullOrWhiteSpace(ReopenReason)">
+                <button class="cp-btn cp-btn-primary" @onclick="HandleReopenSubmit" disabled="@(string.IsNullOrWhiteSpace(ReopenReason))">
                     Confirm
                 </button>
             </div>
@@ -327,7 +327,7 @@
     private int UserId;
     private string CurrentLang = "en";
     private List<StatusHistoryDto> statusHistory => complaint?.StatusHistories ?? new();
-    private bool CanReopen => complaint?.Status == ComplaintStatus.Resolved
+    private bool CanReopen => (complaint?.Status == ComplaintStatus.Resolved || complaint?.Status == ComplaintStatus.Closed)
         && complaint.ResolvedAt.HasValue && (DateTime.UtcNow - complaint.ResolvedAt.Value).TotalDays <= 7;
 
     protected override async Task OnInitializedAsync()
@@ -358,7 +358,7 @@
 
     private void OpenReopenModal() { ShowReopenModal = true; }
 
-    private async Task ReopenComplaint()
+    private async Task HandleReopenSubmit()
     {
         try
         {
@@ -366,7 +366,10 @@
             ShowReopenModal = false;
             ReopenReason = "";
         }
-        catch { }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("console.error", "Reopen failed: " + ex.Message);
+        }
     }
 
     private string GetStatusClass(ComplaintStatus s) => s switch
