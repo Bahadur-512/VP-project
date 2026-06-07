@@ -18,6 +18,8 @@ public class ApplicationUser : BaseEntity
     public DateTime? LastLoginAt { get; set; }
     public int FailedLoginAttempts { get; set; }
     public DateTime? LockoutEndAt { get; set; }
+    public string? PasswordResetToken { get; set; }
+    public DateTime? PasswordResetTokenExpiry { get; set; }
 
     public ICollection<Complaint> Complaints { get; set; } = new List<Complaint>();
     public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
