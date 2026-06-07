@@ -14,7 +14,6 @@ public interface IUserService
     Task<bool> ToggleUserStatusAsync(int id);
     Task<bool> UpdateRoleAsync(int id, string role);
     Task<bool> ResetPasswordAsync(int id, string newPassword);
-    Task<bool> UpdateLanguageAsync(int id, string language);
     Task<PagedResult<UserDto>> GetFilteredAsync(string? role, bool? isActive, string? search, int page = 1, int pageSize = 20);
     Task<bool> InitiatePasswordResetAsync(string email);
     Task<bool> ValidateResetTokenAsync(string token);

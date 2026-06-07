@@ -35,25 +35,6 @@ public class NotificationService : INotificationService
         await _notificationRepo.SaveChangesAsync();
     }
 
-    public async Task CreateWithUrduAsync(int userId, string title, string body, string titleUrdu, string bodyUrdu,
-        NotificationType type, int? relatedComplaintId = null)
-    {
-        var notification = new Notification
-        {
-            UserId = userId,
-            Title = title,
-            Body = body,
-            TitleUrdu = titleUrdu,
-            BodyUrdu = bodyUrdu,
-            Type = type,
-            RelatedComplaintId = relatedComplaintId,
-            IsRead = false
-        };
-
-        await _notificationRepo.AddAsync(notification);
-        await _notificationRepo.SaveChangesAsync();
-    }
-
     public async Task MarkAsReadAsync(int notificationId, int userId)
     {
         var notification = await _notificationRepo

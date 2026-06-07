@@ -1,8 +1,8 @@
 @page "/login"
 @layout AuthLayout
 @attribute [AllowAnonymous]
-@inject LocalizationService Loc
 @inject IJSRuntime JS
+
 
 <div class="auth-layout">
     <div class="auth-brand">
@@ -11,14 +11,9 @@
         <div class="auth-float"></div>
         <div class="auth-float"></div>
 
-        <div class="auth-lang-toggle">
-            <button class="auth-lang-btn" @onclick="ToggleLanguage">@(CurrentLang == "en" ? "اردو" : "English")</button>
-        </div>
-
         <div class="auth-brand-icon"><i class="bi bi-building"></i></div>
         <div class="auth-brand-name">Civic Pulse</div>
-        <div class="auth-brand-tagline">@Loc.Get("app.tagline", CurrentLang)</div>
-        <div class="auth-brand-urdu">آپ کی آواز۔ آپ کا شہر۔</div>
+        <div class="auth-brand-tagline">Your Voice. Your City.</div>
 
         <svg class="auth-svg" width="200" height="120" viewBox="0 0 200 120">
             <rect x="10" y="60" width="30" height="50" fill="white" rx="2"/>
@@ -36,7 +31,6 @@
             <div class="auth-feature-pill"><i class="bi bi-clock-history"></i> SLA-Based Resolution</div>
         </div>
 
-        <div class="auth-brand-footer">BSCS 4C — Air University</div>
     </div>
 
     <div class="auth-panel">
@@ -44,8 +38,8 @@
             @if (activeTab == "login")
             {
                 <div class="auth-tabs">
-                    <div class="auth-tab active" @onclick="GoToLoginTab">@Loc.Get("nav.login", CurrentLang)</div>
-                    <div class="auth-tab" @onclick="GoToRegisterTab">@Loc.Get("nav.register", CurrentLang)</div>
+                    <div class="auth-tab active" @onclick="GoToLoginTab">Log In</div>
+                    <div class="auth-tab" @onclick="GoToRegisterTab">Register</div>
                 </div>
 
                 <div class="auth-title">Welcome Back</div>
@@ -57,7 +51,7 @@
                 }
 
                 <div class="auth-form-group">
-                    <label class="auth-label" for="loginEmail">@Loc.Get("form.email", CurrentLang)</label>
+                    <label class="auth-label" for="loginEmail">Email</label>
                     <div class="auth-input-wrapper">
                         <i class="bi bi-envelope auth-input-icon"></i>
                         <input id="loginEmail" type="email" placeholder="you@example.com" required autocomplete="email" @bind="LoginEmail" />
@@ -65,7 +59,7 @@
                 </div>
 
                 <div class="auth-form-group">
-                    <label class="auth-label" for="loginPassword">@Loc.Get("form.password", CurrentLang)</label>
+                    <label class="auth-label" for="loginPassword">Password</label>
                     <div class="auth-input-wrapper">
                         <i class="bi bi-lock auth-input-icon"></i>
                         <input id="loginPassword" type="password" placeholder="Enter your password" required autocomplete="current-password" @bind="LoginPassword" />
@@ -84,7 +78,7 @@
                 </div>
 
                 <button type="submit" class="auth-btn auth-btn-primary auth-btn-block" id="loginBtn" @onclick="HandleLoginSubmit">
-                    <span class="auth-btn-text">@Loc.Get("nav.login", CurrentLang)</span>
+                    <span class="auth-btn-text">Log In</span>
                 </button>
 
                 <div class="auth-demo">
@@ -99,8 +93,8 @@
             @if (activeTab == "register")
             {
                 <div class="auth-tabs">
-                    <div class="auth-tab" @onclick="GoToLoginTab">@Loc.Get("nav.login", CurrentLang)</div>
-                    <div class="auth-tab active" @onclick="GoToRegisterTab">@Loc.Get("nav.register", CurrentLang)</div>
+                    <div class="auth-tab" @onclick="GoToLoginTab">Log In</div>
+                    <div class="auth-tab active" @onclick="GoToRegisterTab">Register</div>
                 </div>
 
                 <div class="auth-title">Create an Account</div>
@@ -120,7 +114,7 @@
                 </div>
 
                 <div class="auth-form-group">
-                    <label class="auth-label" for="regEmail">@Loc.Get("form.email", CurrentLang)</label>
+                    <label class="auth-label" for="regEmail">Email</label>
                     <div class="auth-input-wrapper">
                         <i class="bi bi-envelope auth-input-icon"></i>
                         <input id="regEmail" type="email" placeholder="john@example.com" required autocomplete="email" @bind="RegEmail" />
@@ -128,7 +122,7 @@
                 </div>
 
                 <div class="auth-form-group">
-                    <label class="auth-label" for="regPhone">@Loc.Get("form.phone", CurrentLang)</label>
+                    <label class="auth-label" for="regPhone">Phone</label>
                     <div class="auth-input-wrapper">
                         <i class="bi bi-telephone auth-input-icon"></i>
                         <input id="regPhone" type="tel" placeholder="0300-1234567" autocomplete="tel" @bind="RegPhone" />
@@ -136,7 +130,7 @@
                 </div>
 
                 <div class="auth-form-group">
-                    <label class="auth-label" for="regPassword">@Loc.Get("form.password", CurrentLang)</label>
+                    <label class="auth-label" for="regPassword">Password</label>
                     <div class="auth-input-wrapper">
                         <i class="bi bi-lock auth-input-icon"></i>
                         <input id="regPassword" type="password" placeholder="Create a strong password" required autocomplete="new-password" @bind="RegPassword" @oninput="OnRegPasswordChange" />
@@ -158,17 +152,17 @@
                 </div>
 
                 <div class="auth-form-group">
-                    <label class="auth-label" for="regConfirmPw">@Loc.Get("form.confirm.password", CurrentLang)</label>
+                    <label class="auth-label" for="regConfirmPw">Confirm Password</label>
                     <div class="auth-input-wrapper">
                         <i class="bi bi-lock auth-input-icon"></i>
                         <input id="regConfirmPw" type="password" placeholder="Repeat your password" required autocomplete="new-password" @bind="RegConfirmPw" @oninput="OnRegConfirmPwChange" />
                         <button type="button" class="auth-pw-toggle" onclick="authTogglePw(this)" tabindex="-1" aria-label="Toggle password"><i class="bi bi-eye-slash"></i></button>
                     </div>
-                    <div class="auth-field-error" id="regPwMatchError" style="@PwErrorStyle"><i class="bi bi-x-circle"></i> @Loc.Get("form.pw.mismatch", CurrentLang)</div>
+                    <div class="auth-field-error" id="regPwMatchError" style="@PwErrorStyle"><i class="bi bi-x-circle"></i> Passwords do not match</div>
                 </div>
 
                 <button type="submit" class="auth-btn auth-btn-accent auth-btn-block" id="registerBtn" @onclick="HandleRegisterSubmit">
-                    <span class="auth-btn-text">@Loc.Get("btn.submit", CurrentLang)</span>
+                    <span class="auth-btn-text">Submit</span>
                 </button>
 
                 <div class="auth-demo">
@@ -266,7 +260,6 @@
 
 @code {
     private string activeTab = "login";
-    private string CurrentLang = "en";
 
     // Login fields
     private string LoginEmail = "";
@@ -285,7 +278,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await Loc.InitializeAsync();
         var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
         var q = uri.Query.TrimStart('?');
         if (!string.IsNullOrEmpty(q))
@@ -309,12 +301,6 @@
         activeTab = tab;
         Error = "";
         RegError = "";
-    }
-
-    private async Task ToggleLanguage()
-    {
-        CurrentLang = CurrentLang == "en" ? "ur" : "en";
-        await JS.InvokeVoidAsync("CivicInterop.setHtmlLang", CurrentLang);
     }
 
     private void FillCredentials(string role)

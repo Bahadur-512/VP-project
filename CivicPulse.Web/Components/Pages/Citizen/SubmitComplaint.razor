@@ -6,7 +6,6 @@
 @inject AiCategorizationService AiService
 @inject AuthenticationStateProvider AuthState
 @inject NavigationManager Navigation
-@inject LocalizationService Loc
 @inject IJSRuntime JS
 @inject IHttpClientFactory HttpClientFactory
 @inject IConfiguration Config
@@ -30,7 +29,7 @@
                 else { <span>1</span> }
             </div>
             <div class="sc-step-label">
-                <span class="sc-step-name">@Loc["step.describe"]</span>
+                <span class="sc-step-name">Describe</span>
                 <span class="sc-step-hint">Provide details</span>
             </div>
         </div>
@@ -41,7 +40,7 @@
                 else { <span>2</span> }
             </div>
             <div class="sc-step-label">
-                <span class="sc-step-name">@Loc["step.location"]</span>
+                <span class="sc-step-name">Location</span>
                 <span class="sc-step-hint">Mark on map</span>
             </div>
         </div>
@@ -49,7 +48,7 @@
         <div class="sc-step @GetStepClass(3)">
             <div class="sc-step-circle"><span>3</span></div>
             <div class="sc-step-label">
-                <span class="sc-step-name">@Loc["step.attachments"]</span>
+                <span class="sc-step-name">Attachments</span>
                 <span class="sc-step-hint">Upload photos</span>
             </div>
         </div>
@@ -532,7 +531,7 @@
                 {
                     <div class="sc-success-banner">
                         <i class="bi bi-check-circle-fill"></i>
-                        @Loc["msg.submit.success"]
+                        Complaint submitted successfully!
                     </div>
                 }
 
@@ -567,13 +566,13 @@
     <div class="cp-modal-overlay" @onclick="() => ShowConfirmation = false">
         <div class="cp-modal" @onclick:stopPropagation>
             <div class="cp-modal-header">
-                <span>✅ @Loc["msg.submit.success"]</span>
+                <span>✅ Complaint submitted successfully!</span>
                 <button class="cp-modal-close" @onclick="() => ShowConfirmation = false">&times;</button>
             </div>
-            <p>@Loc["complaint.number"]: <strong>@SubmittedNumber</strong></p>
+            <p>Complaint #: <strong>@SubmittedNumber</strong></p>
             <div class="cp-modal-footer">
                 <a href="/citizen/complaints/@SubmittedId" class="cd-view-btn">View Details</a>
-                <a href="/citizen/complaints" class="cd-view-btn">@Loc["nav.my.complaints"]</a>
+                <a href="/citizen/complaints" class="cd-view-btn">My Complaints</a>
             </div>
         </div>
     </div>
@@ -591,7 +590,6 @@
     private int SubmittedId;
     private List<IBrowserFile> SelectedFiles = new();
     private int UserId;
-    private string CurrentLang = "en";
 
     private bool isAnalyzing;
     private bool isDragging;
@@ -607,7 +605,6 @@
         var authState = await AuthState.GetAuthenticationStateAsync();
         var user = authState.User;
         UserId = int.Parse(user.FindFirst("userId")?.Value ?? "0");
-        CurrentLang = user.FindFirst("language")?.Value ?? "en";
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

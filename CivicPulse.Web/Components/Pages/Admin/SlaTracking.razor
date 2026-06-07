@@ -4,7 +4,6 @@
 @inject IComplaintService ComplaintService
 @inject ISlaService SlaService
 @inject NavigationManager Navigation
-@inject LocalizationService Loc
 @inject AuthenticationStateProvider AuthStateProvider
 
 <div class="sla-page">
@@ -237,12 +236,10 @@
     private List<ComplaintDto> SlaApproaching = new();
     private List<ComplaintDto> OnTrack = new();
     private bool IsLoading = true;
-    private string CurrentLang = "en";
 
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-        CurrentLang = authState.User.FindFirst("language")?.Value ?? "en";
 
         SlaBreached = await ComplaintService.GetSlaBreachedAsync();
         SlaApproaching = await ComplaintService.GetSlaApproachingAsync(80);

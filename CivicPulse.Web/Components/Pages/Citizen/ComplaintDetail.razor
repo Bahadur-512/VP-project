@@ -5,7 +5,6 @@
 @inject IFeedbackService FeedbackService
 @inject AuthenticationStateProvider AuthState
 @inject NavigationManager Navigation
-@inject LocalizationService Loc
 @inject IJSRuntime JS
 
 <div class="cdet-page">
@@ -325,7 +324,6 @@
     private string ReopenReason = "";
     private bool hasFeedback;
     private int UserId;
-    private string CurrentLang = "en";
     private List<StatusHistoryDto> statusHistory => complaint?.StatusHistories ?? new();
     private bool CanReopen => (complaint?.Status == ComplaintStatus.Resolved || complaint?.Status == ComplaintStatus.Closed)
         && complaint.ResolvedAt.HasValue && (DateTime.UtcNow - complaint.ResolvedAt.Value).TotalDays <= 7;
@@ -335,7 +333,6 @@
         var authState = await AuthState.GetAuthenticationStateAsync();
         var user = authState.User;
         UserId = int.Parse(user.FindFirst("userId")?.Value ?? "0");
-        CurrentLang = user.FindFirst("language")?.Value ?? "en";
 
         try
         {

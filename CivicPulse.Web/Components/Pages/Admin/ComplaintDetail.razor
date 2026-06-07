@@ -6,7 +6,6 @@
 @inject IFeedbackService FeedbackService
 @inject AuthenticationStateProvider AuthState
 @inject NavigationManager Navigation
-@inject LocalizationService Loc
 @inject IJSRuntime JS
 
 <style>
@@ -596,7 +595,6 @@
     private ComplaintStatus NewStatus;
     private string StatusNote = "";
     private int AdminId;
-    private string CurrentLang = "en";
     private bool _mapInitialized;
 
     protected override async Task OnInitializedAsync()
@@ -604,7 +602,6 @@
         var authState = await AuthState.GetAuthenticationStateAsync();
         var user = authState.User;
         AdminId = int.Parse(user.FindFirst("userId")?.Value ?? "0");
-        CurrentLang = user.FindFirst("language")?.Value ?? "en";
 
         try
         {

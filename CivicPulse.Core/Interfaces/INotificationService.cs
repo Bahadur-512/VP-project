@@ -6,7 +6,6 @@ namespace CivicPulse.Core.Interfaces;
 public interface INotificationService
 {
     Task CreateAsync(int userId, string title, string body, NotificationType type, int? relatedComplaintId = null);
-    Task CreateWithUrduAsync(int userId, string title, string body, string titleUrdu, string bodyUrdu, NotificationType type, int? relatedComplaintId = null);
     Task MarkAsReadAsync(int notificationId, int userId);
     Task MarkAllAsReadAsync(int userId);
     Task<List<NotificationDto>> GetUnreadAsync(int userId);

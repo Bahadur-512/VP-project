@@ -40,12 +40,10 @@ public class SlaService : ISlaService
                 complaint.IsSlaBreached = true;
                 _complaintRepo.Update(complaint);
 
-                await _notificationService.CreateWithUrduAsync(
+                await _notificationService.CreateAsync(
                     complaint.CitizenId,
                     "SLA Breached",
                     $"SLA deadline passed for complaint {complaint.ComplaintNumber}",
-                    "SLA کی خلاف ورزی",
-                    $"شکایت {complaint.ComplaintNumber} کا SLA وقت ختم ہو گیا ہے",
                     NotificationType.SlaWarning,
                     complaint.Id);
 
@@ -55,12 +53,10 @@ public class SlaService : ISlaService
             }
             else if (elapsedPercent >= 80 && elapsedPercent < 100)
             {
-                await _notificationService.CreateWithUrduAsync(
+                await _notificationService.CreateAsync(
                     complaint.CitizenId,
                     "SLA Warning",
                     $"SLA deadline approaching for complaint {complaint.ComplaintNumber}",
-                    "SLA وارننگ",
-                    $"شکایت {complaint.ComplaintNumber} کا SLA وقت قریب ہے",
                     NotificationType.SlaWarning,
                     complaint.Id);
 

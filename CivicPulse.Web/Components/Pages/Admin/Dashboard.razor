@@ -6,7 +6,6 @@
 @inject INotificationService NotificationService
 @inject IFeedbackService FeedbackService
 @inject NavigationManager Navigation
-@inject LocalizationService Loc
 @inject IJSRuntime JS
 @inject AuthenticationStateProvider AuthStateProvider
 @implements IAsyncDisposable
@@ -382,12 +381,10 @@
     private List<PriorityDistributionDto> PriorityDist = new();
     private List<FeedbackDto> FeedbackItems = new();
     private bool IsLoading = true;
-    private string CurrentLang = "en";
 
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-        CurrentLang = authState.User.FindFirst("language")?.Value ?? "en";
 
         Stats = await AnalyticsService.GetAdminStatsAsync();
         HeatmapData = await AnalyticsService.GetComplaintsByAreaAsync();

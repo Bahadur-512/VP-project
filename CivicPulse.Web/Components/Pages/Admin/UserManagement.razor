@@ -3,7 +3,6 @@
 @attribute [Authorize(Policy = "AdminOnly")]
 @inject IUserService UserService
 @inject NavigationManager Navigation
-@inject LocalizationService Loc
 @inject AuthenticationStateProvider AuthStateProvider
 
 <div class="um-page">
@@ -292,7 +291,6 @@
     private bool ShowReset;
     private int ResetUserId;
     private string NewFullName = "", NewEmail = "", NewPassword = "Temp@123", NewRole = "Citizen", NewResetPassword = "Temp@123";
-    private string CurrentLang = "en";
     private bool _roleOpen;
     private bool _statusOpen;
 
@@ -311,7 +309,6 @@
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-        CurrentLang = authState.User.FindFirst("language")?.Value ?? "en";
         await LoadData();
     }
 

@@ -52,7 +52,7 @@ builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<IAttachmentService, AttachmentService>();
 builder.Services.AddScoped<ISlaService, SlaService>();
-builder.Services.AddScoped<LocalizationService>();
+
 builder.Services.AddScoped<CategorizationEngine>();
 builder.Services.AddHttpClient<AiCategorizationService>();
 builder.Services.AddScoped<AiCategorizationService>();
@@ -151,7 +151,6 @@ static ClaimsPrincipal CreatePrincipal(UserDto user, string method)
         new(ClaimTypes.Email, user.Email),
         new(ClaimTypes.Name, user.FullName),
         new("role", user.Role.ToString()),
-        new("language", user.PreferredLanguage),
         new("userId", user.Id.ToString())
     };
     var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

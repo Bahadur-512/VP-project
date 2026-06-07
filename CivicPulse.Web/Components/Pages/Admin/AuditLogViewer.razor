@@ -2,7 +2,6 @@
 @layout AdminLayout
 @attribute [Authorize(Policy = "AdminOnly")]
 @inject IAuditLogService AuditLogService
-@inject LocalizationService Loc
 @inject IJSRuntime JS
 @inject AuthenticationStateProvider AuthStateProvider
 
@@ -253,7 +252,6 @@
     private int CurrentPage = 1;
     private int? expandedLogId;
     private bool isLoading = true;
-    private string CurrentLang = "en";
     private bool _actionOpen;
     private bool _entityOpen;
 
@@ -306,7 +304,6 @@
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-        CurrentLang = authState.User.FindFirst("language")?.Value ?? "en";
         await LoadData();
     }
 

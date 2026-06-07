@@ -2,6 +2,7 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 
 namespace CivicPulse.Web.Services;
 
@@ -39,15 +40,21 @@ public interface IEmailNotificationService
 public class EmailNotificationService : IEmailNotificationService
 {
     private readonly SmtpSettings _smtp;
+    private readonly IConfiguration _config;
     private readonly ILogger<EmailNotificationService> _logger;
 
     public EmailNotificationService(
         IOptions<SmtpSettings> smtp,
+        IConfiguration config,
         ILogger<EmailNotificationService> logger)
     {
         _smtp = smtp.Value;
+        _config = config;
         _logger = logger;
     }
+
+    private string AppUrl =>
+        _config["AppSettings:AppUrl"] ?? "https://localhost:7150";
 
     // ── STATUS UPDATE EMAIL ──
     public async Task SendStatusUpdateAsync(
@@ -95,7 +102,7 @@ public class EmailNotificationService : IEmailNotificationService
                 </div>
             </div>
             {(note != null ? $"<div style='background:#EFF6FF;border-left:4px solid #1B3A6B;padding:12px 16px;border-radius:0 8px 8px 0;margin-bottom:20px;'><p style='color:#1B3A6B;font-size:13px;margin:0;font-style:italic;'>Note: {note}</p></div>" : "")}",
-            actionUrl: $"https://localhost:5001/citizen/complaints",
+            actionUrl: $"{AppUrl}/citizen/complaints",
             actionText: "View My Complaints"
         );
 
@@ -131,7 +138,7 @@ public class EmailNotificationService : IEmailNotificationService
                 You will receive email updates when the status of your complaint changes.
                 You can also track it anytime in your Civic Pulse dashboard.
             </p>",
-            actionUrl: $"https://localhost:5001/citizen/complaints",
+            actionUrl: $"{AppUrl}/citizen/complaints",
             actionText: "Track My Complaint"
         );
 
@@ -162,7 +169,7 @@ public class EmailNotificationService : IEmailNotificationService
                 <strong>{complaintTitle}</strong> — Our team is working on resolving this issue. 
                 If you need urgent attention, please contact support.
             </p>",
-            actionUrl: $"https://localhost:5001/citizen/complaints",
+            actionUrl: $"{AppUrl}/citizen/complaints",
             actionText: "View Complaint"
         );
 
@@ -190,7 +197,7 @@ public class EmailNotificationService : IEmailNotificationService
             <div style='text-align:center;font-size:32px;letter-spacing:8px;margin-bottom:20px;'>
                 ⭐⭐⭐⭐⭐
             </div>",
-            actionUrl: $"https://localhost:5001/citizen/feedback/{complaintId}",
+            actionUrl: $"{AppUrl}/citizen/feedback/{complaintId}",
             actionText: "Rate Your Experience"
         );
 
@@ -203,7 +210,7 @@ public class EmailNotificationService : IEmailNotificationService
     public async Task SendPasswordResetAsync(
         string toEmail, string userName, string resetToken)
     {
-        var resetUrl = $"https://localhost:5001/reset-password?token={resetToken}";
+        var resetUrl = $"{AppUrl}/reset-password?token={resetToken}";
 
         var html = BuildEmailTemplate(
             title: "Reset Your Password",
@@ -301,7 +308,7 @@ public class EmailNotificationService : IEmailNotificationService
                 <!-- Footer -->
                 <tr><td style='background:#F8FAFC;padding:20px 32px;border-radius:0 0 16px 16px;border-top:1px solid #E2E8F0;'>
                     <p style='color:#9CA3AF;font-size:12px;margin:0;text-align:center;'>
-                        This email was sent by Civic Pulse — BSCS 4C, Air University Islamabad<br>
+                        This email was sent by Civic Pulse — Automated Notification<br>
                         You received this because you registered a complaint on our platform.
                     </p>
                 </td></tr>

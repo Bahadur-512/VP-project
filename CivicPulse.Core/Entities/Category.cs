@@ -5,7 +5,6 @@ namespace CivicPulse.Core.Entities;
 public class Category : BaseEntity
 {
     public string Name { get; set; } = string.Empty;
-    public string NameUrdu { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string IconName { get; set; } = string.Empty;
     public string ColorHex { get; set; } = string.Empty;

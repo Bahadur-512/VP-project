@@ -63,23 +63,6 @@ window.CivicInterop = {
         return null;
     },
 
-    setLocalStorage: function (key, value) {
-        localStorage.setItem(key, value);
-    },
-
-    getLocalStorage: function (key) {
-        return localStorage.getItem(key);
-    },
-
-    setHtmlLang: function (lang) {
-        document.documentElement.lang = lang;
-        if (lang === 'ur') {
-            document.body.setAttribute('lang', 'ur');
-        } else {
-            document.body.removeAttribute('lang');
-        }
-    },
-
     scrollToTop: function () {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     },

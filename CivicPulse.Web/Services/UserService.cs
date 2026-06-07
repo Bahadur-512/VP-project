@@ -40,8 +40,7 @@ public class UserService : IUserService
             PasswordHash = PasswordHelper.HashPassword(dto.Password),
             Role = UserRole.Citizen,
             IsActive = true,
-            IsEmailVerified = true,
-            PreferredLanguage = "en"
+            IsEmailVerified = true
         };
 
         await _userRepo.AddAsync(user);
@@ -189,17 +188,6 @@ public class UserService : IUserService
         return true;
     }
 
-    public async Task<bool> UpdateLanguageAsync(int id, string language)
-    {
-        var user = await _userRepo.GetByIdAsync(id);
-        if (user == null) return false;
-
-        user.PreferredLanguage = language;
-        _userRepo.Update(user);
-        await _userRepo.SaveChangesAsync();
-        return true;
-    }
-
     public async Task<PagedResult<UserDto>> GetFilteredAsync(string? role, bool? isActive, string? search, int page = 1, int pageSize = 20)
     {
         var query = _userRepo.Query().AsQueryable();
@@ -300,7 +288,6 @@ public class UserService : IUserService
         RoleName = user.Role.ToString(),
         IsActive = user.IsActive,
         IsEmailVerified = user.IsEmailVerified,
-        PreferredLanguage = user.PreferredLanguage,
         LastLoginAt = user.LastLoginAt,
         CreatedAt = user.CreatedAt,
         ComplaintCount = user.Complaints?.Count ?? 0

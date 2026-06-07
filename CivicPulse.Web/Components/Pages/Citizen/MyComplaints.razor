@@ -5,7 +5,6 @@
 @inject ICategoryService CategoryService
 @inject AuthenticationStateProvider AuthState
 @inject NavigationManager Navigation
-@inject LocalizationService Loc
 
 <div class="mc-page">
 
@@ -312,7 +311,6 @@
     private string ViewMode = "table";
     private bool IsLoading = true;
     private int UserId;
-    private string CurrentLang = "en";
     private bool _statusOpen;
     private bool _categoryOpen;
     private bool _priorityOpen;
@@ -345,7 +343,6 @@
         var authState = await AuthState.GetAuthenticationStateAsync();
         var user = authState.User;
         UserId = int.Parse(user.FindFirst("userId")?.Value ?? "0");
-        CurrentLang = user.FindFirst("language")?.Value ?? "en";
         Categories = await CategoryService.GetActiveAsync();
         await LoadComplaints();
     }

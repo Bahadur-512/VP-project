@@ -28,7 +28,7 @@ public class AppDbContext : DbContext
             entity.Property(e => e.PasswordHash).IsRequired();
             entity.Property(e => e.PhoneNumber).HasMaxLength(20);
             entity.Property(e => e.CNIC).HasMaxLength(13);
-            entity.Property(e => e.PreferredLanguage).HasMaxLength(5).HasDefaultValue("en");
+
         });
 
         modelBuilder.Entity<Complaint>(entity =>
@@ -59,7 +59,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Category>(entity =>
         {
             entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
-            entity.Property(e => e.NameUrdu).HasMaxLength(100);
+
             entity.Property(e => e.Description).HasMaxLength(500);
             entity.Property(e => e.IconName).HasMaxLength(50);
             entity.Property(e => e.ColorHex).HasMaxLength(7);
@@ -116,8 +116,7 @@ public class AppDbContext : DbContext
         {
             entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
             entity.Property(e => e.Body).HasMaxLength(1000);
-            entity.Property(e => e.TitleUrdu).HasMaxLength(200);
-            entity.Property(e => e.BodyUrdu).HasMaxLength(1000);
+
 
             entity.HasOne(e => e.User)
                 .WithMany(u => u.Notifications)

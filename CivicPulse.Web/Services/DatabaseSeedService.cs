@@ -45,16 +45,16 @@ public class DatabaseSeedService : IHostedService
     {
         var categories = new List<Category>
         {
-            new() { Name = "Road Damage", NameUrdu = "سڑک کا نقصان", Description = "Damaged roads, potholes, broken pavement", IconName = "bi-road", ColorHex = "#FF6B35", DefaultSlaDays = 7, DefaultPriority = PriorityLevel.High, Keywords = "road,pothole,crack,damaged,broken road,pavement" },
-            new() { Name = "Water Supply", NameUrdu = "پانی کی فراہمی", Description = "Water supply issues, pipe leaks, shortage", IconName = "bi-droplet", ColorHex = "#2196F3", DefaultSlaDays = 2, DefaultPriority = PriorityLevel.Critical, Keywords = "water,pipe,leak,supply,shortage,pressure" },
-            new() { Name = "Electricity Fault", NameUrdu = "بجلی کی خرابی", Description = "Power outages, electrical faults, transformer issues", IconName = "bi-lightning", ColorHex = "#FFC107", DefaultSlaDays = 1, DefaultPriority = PriorityLevel.Critical, Keywords = "electricity,light,power,outage,wire,transformer,fault" },
-            new() { Name = "Waste & Sanitation", NameUrdu = "فضلہ اور صفائی", Description = "Garbage collection, waste dumping, sanitation", IconName = "bi-trash", ColorHex = "#4CAF50", DefaultSlaDays = 3, DefaultPriority = PriorityLevel.Medium, Keywords = "garbage,waste,trash,dump,sanitation,smell,dirty" },
-            new() { Name = "Street Lighting", NameUrdu = "اسٹریٹ لائٹ", Description = "Street light malfunctions, dark areas", IconName = "bi-lamp", ColorHex = "#9C27B0", DefaultSlaDays = 5, DefaultPriority = PriorityLevel.Medium, Keywords = "light,street light,lamp,dark,lighting" },
-            new() { Name = "Sewerage", NameUrdu = "سیوریج", Description = "Sewer blockages, drain overflow, sewage issues", IconName = "bi-water", ColorHex = "#795548", DefaultSlaDays = 2, DefaultPriority = PriorityLevel.High, Keywords = "sewer,drain,overflow,sewage,blocked" },
-            new() { Name = "Parks & Green Spaces", NameUrdu = "پارک", Description = "Park maintenance, gardens, playgrounds", IconName = "bi-tree", ColorHex = "#4CAF50", DefaultSlaDays = 10, DefaultPriority = PriorityLevel.Low, Keywords = "park,tree,garden,grass,bench,playground" },
-            new() { Name = "Building Hazard", NameUrdu = "عمارتی خطرہ", Description = "Unsafe buildings, structural hazards, collapse risk", IconName = "bi-building", ColorHex = "#F44336", DefaultSlaDays = 1, DefaultPriority = PriorityLevel.Critical, Keywords = "building,collapse,crack,unsafe,hazard,falling" },
-            new() { Name = "Noise Pollution", NameUrdu = "شور کی آلودگی", Description = "Excessive noise, loudspeakers, disturbances", IconName = "bi-volume-up", ColorHex = "#607D8B", DefaultSlaDays = 5, DefaultPriority = PriorityLevel.Low, Keywords = "noise,loud,sound,disturb,horn,speaker" },
-            new() { Name = "Encroachment", NameUrdu = "تجاوزات", Description = "Illegal construction, footpath blocking, encroachment", IconName = "bi-x-circle", ColorHex = "#E91E63", DefaultSlaDays = 7, DefaultPriority = PriorityLevel.Medium, Keywords = "encroach,block,footpath,road block,illegal" }
+            new() { Name = "Road Damage", Description = "Damaged roads, potholes, broken pavement", IconName = "bi-road", ColorHex = "#FF6B35", DefaultSlaDays = 7, DefaultPriority = PriorityLevel.High, Keywords = "road,pothole,crack,damaged,broken road,pavement" },
+            new() { Name = "Water Supply", Description = "Water supply issues, pipe leaks, shortage", IconName = "bi-droplet", ColorHex = "#2196F3", DefaultSlaDays = 2, DefaultPriority = PriorityLevel.Critical, Keywords = "water,pipe,leak,supply,shortage,pressure" },
+            new() { Name = "Electricity Fault", Description = "Power outages, electrical faults, transformer issues", IconName = "bi-lightning", ColorHex = "#FFC107", DefaultSlaDays = 1, DefaultPriority = PriorityLevel.Critical, Keywords = "electricity,light,power,outage,wire,transformer,fault" },
+            new() { Name = "Waste & Sanitation", Description = "Garbage collection, waste dumping, sanitation", IconName = "bi-trash", ColorHex = "#4CAF50", DefaultSlaDays = 3, DefaultPriority = PriorityLevel.Medium, Keywords = "garbage,waste,trash,dump,sanitation,smell,dirty" },
+            new() { Name = "Street Lighting", Description = "Street light malfunctions, dark areas", IconName = "bi-lamp", ColorHex = "#9C27B0", DefaultSlaDays = 5, DefaultPriority = PriorityLevel.Medium, Keywords = "light,street light,lamp,dark,lighting" },
+            new() { Name = "Sewerage", Description = "Sewer blockages, drain overflow, sewage issues", IconName = "bi-water", ColorHex = "#795548", DefaultSlaDays = 2, DefaultPriority = PriorityLevel.High, Keywords = "sewer,drain,overflow,sewage,blocked" },
+            new() { Name = "Parks & Green Spaces", Description = "Park maintenance, gardens, playgrounds", IconName = "bi-tree", ColorHex = "#4CAF50", DefaultSlaDays = 10, DefaultPriority = PriorityLevel.Low, Keywords = "park,tree,garden,grass,bench,playground" },
+            new() { Name = "Building Hazard", Description = "Unsafe buildings, structural hazards, collapse risk", IconName = "bi-building", ColorHex = "#F44336", DefaultSlaDays = 1, DefaultPriority = PriorityLevel.Critical, Keywords = "building,collapse,crack,unsafe,hazard,falling" },
+            new() { Name = "Noise Pollution", Description = "Excessive noise, loudspeakers, disturbances", IconName = "bi-volume-up", ColorHex = "#607D8B", DefaultSlaDays = 5, DefaultPriority = PriorityLevel.Low, Keywords = "noise,loud,sound,disturb,horn,speaker" },
+            new() { Name = "Encroachment", Description = "Illegal construction, footpath blocking, encroachment", IconName = "bi-x-circle", ColorHex = "#E91E63", DefaultSlaDays = 7, DefaultPriority = PriorityLevel.Medium, Keywords = "encroach,block,footpath,road block,illegal" }
         };
 
         db.Categories.AddRange(categories);
@@ -70,8 +70,7 @@ public class DatabaseSeedService : IHostedService
             PasswordHash = PasswordHelper.HashPassword(_configuration["AppSettings:DefaultAdminPassword"] ?? "Admin@123!"),
             Role = UserRole.Admin,
             IsActive = true,
-            IsEmailVerified = true,
-            PreferredLanguage = "en"
+            IsEmailVerified = true
         };
 
         var demoCitizen = new ApplicationUser
@@ -82,7 +81,6 @@ public class DatabaseSeedService : IHostedService
             Role = UserRole.Citizen,
             IsActive = true,
             IsEmailVerified = true,
-            PreferredLanguage = "en",
             PhoneNumber = "0300-1234567"
         };
 

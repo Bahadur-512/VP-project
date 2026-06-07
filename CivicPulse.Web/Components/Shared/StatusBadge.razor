@@ -4,34 +4,13 @@
 
 @code {
     [Parameter] public ComplaintStatus Status { get; set; }
-    [Parameter] public string Language { get; set; } = "en";
 
     private string StatusClass => Status.ToString().ToLowerInvariant();
 
-    private string DisplayText
+    private string DisplayText => Status switch
     {
-        get
-        {
-            if (Language == "ur")
-            {
-                return Status switch
-                {
-                    ComplaintStatus.Pending => "زیر التواء",
-                    ComplaintStatus.UnderReview => "زیر جائزہ",
-                    ComplaintStatus.InProgress => "جاری ہے",
-                    ComplaintStatus.Resolved => "حل ہو گیا",
-                    ComplaintStatus.Closed => "بند کر دیا گیا",
-                    ComplaintStatus.Rejected => "مسترد کر دیا گیا",
-                    ComplaintStatus.Reopened => "دوبارہ کھولا گیا",
-                    _ => Status.ToString()
-                };
-            }
-            return Status switch
-            {
-                ComplaintStatus.UnderReview => "Under Review",
-                ComplaintStatus.InProgress => "In Progress",
-                _ => Status.ToString()
-            };
-        }
-    }
+        ComplaintStatus.UnderReview => "Under Review",
+        ComplaintStatus.InProgress => "In Progress",
+        _ => Status.ToString()
+    };
 }

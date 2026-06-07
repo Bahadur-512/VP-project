@@ -32,7 +32,6 @@
 
 .cat-card-info { display:flex; flex-direction:column; gap:3px; }
 .cat-name { font-size:0.95rem; font-weight:800; color:#1A202C; margin:0; }
-.cat-name-ur { font-size:0.82rem; color:#6B7280; margin:0; font-family:'Noto Nastaliq Urdu',serif; direction:rtl; line-height:1.8; }
 
 .cat-meta-row { display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }
 .cat-meta-item { display:flex; align-items:center; gap:5px; font-size:0.75rem; color:#6B7280; }

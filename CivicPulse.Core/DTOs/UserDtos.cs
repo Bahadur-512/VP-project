@@ -13,7 +13,6 @@ public class UserDto
     public string RoleName { get; set; } = string.Empty;
     public bool IsActive { get; set; }
     public bool IsEmailVerified { get; set; }
-    public string PreferredLanguage { get; set; } = "en";
     public DateTime? LastLoginAt { get; set; }
     public DateTime CreatedAt { get; set; }
     public int ComplaintCount { get; set; }

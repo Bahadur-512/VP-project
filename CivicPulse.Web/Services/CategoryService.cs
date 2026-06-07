@@ -38,7 +38,6 @@ public class CategoryService : ICategoryService
         var category = new Category
         {
             Name = dto.Name,
-            NameUrdu = dto.NameUrdu,
             Description = dto.Description,
             IconName = dto.IconName,
             ColorHex = dto.ColorHex,
@@ -61,7 +60,6 @@ public class CategoryService : ICategoryService
             ?? throw new KeyNotFoundException("Category not found.");
 
         category.Name = dto.Name;
-        category.NameUrdu = dto.NameUrdu;
         category.Description = dto.Description;
         category.IconName = dto.IconName;
         category.ColorHex = dto.ColorHex;
@@ -101,7 +99,6 @@ public class CategoryService : ICategoryService
     {
         Id = c.Id,
         Name = c.Name,
-        NameUrdu = c.NameUrdu,
         Description = c.Description,
         IconName = c.IconName,
         ColorHex = c.ColorHex,

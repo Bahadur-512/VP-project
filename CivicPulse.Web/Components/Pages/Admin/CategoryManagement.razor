@@ -2,7 +2,6 @@
 @layout AdminLayout
 @attribute [Authorize(Policy = "AdminOnly")]
 @inject ICategoryService CategoryService
-@inject LocalizationService Loc
 @inject AuthenticationStateProvider AuthStateProvider
 
 <div class="cat-page">
@@ -85,10 +84,6 @@
 
                         <div class="cat-card-info">
                             <h3 class="cat-name">@cat.Name</h3>
-                            @if (!string.IsNullOrEmpty(cat.NameUrdu))
-                            {
-                                <p class="cat-name-ur">@cat.NameUrdu</p>
-                            }
                         </div>
 
                         <div class="cat-meta-row">
@@ -153,10 +148,6 @@
                     <input class="cp-input" @bind="EditItem!.Name" />
                 </div>
                 <div class="cp-form-group">
-                    <label class="cp-form-label">Name (Urdu)</label>
-                    <input class="cp-input" @bind="EditItem.NameUrdu" />
-                </div>
-                <div class="cp-form-group">
                     <label class="cp-form-label">Icon</label>
                     <input class="cp-input" @bind="EditItem.IconName" placeholder="bi-road" />
                 </div>
@@ -206,8 +197,8 @@
                 </label>
             </div>
             <div class="cp-modal-footer">
-                <button class="cp-btn cp-btn-secondary" @onclick="() => ShowModal = false">@Loc.Get("btn.cancel", CurrentLang)</button>
-                <button class="cp-btn cp-btn-primary" @onclick="SaveCategory">@Loc.Get("btn.save", CurrentLang)</button>
+                <button class="cp-btn cp-btn-secondary" @onclick="() => ShowModal = false">Cancel</button>
+                <button class="cp-btn cp-btn-primary" @onclick="SaveCategory">Save</button>
             </div>
         </div>
     </div>
@@ -220,12 +211,9 @@
     private CategoryDto EditItem = new();
     private List<string> KeywordsList = new();
     private string NewKeyword = "";
-    private string CurrentLang = "en";
-
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-        CurrentLang = authState.User.FindFirst("language")?.Value ?? "en";
         categories = await CategoryService.GetAllAsync();
         IsLoading = false;
     }
@@ -246,7 +234,7 @@
         {
             EditItem = new CategoryDto
             {
-                Id = c.Id, Name = c.Name, NameUrdu = c.NameUrdu, Description = c.Description,
+                Id = c.Id, Name = c.Name, Description = c.Description,
                 IconName = c.IconName, ColorHex = c.ColorHex, DefaultSlaDays = c.DefaultSlaDays,
                 DefaultPriority = c.DefaultPriority, IsActive = c.IsActive, Keywords = c.Keywords
             };

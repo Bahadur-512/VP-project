@@ -4,7 +4,6 @@
 @inject IComplaintService ComplaintService
 @inject ICategoryService CategoryService
 @inject NavigationManager Navigation
-@inject LocalizationService Loc
 @inject IJSRuntime JS
 @inject AuthenticationStateProvider AuthStateProvider
 
@@ -107,7 +106,7 @@
         </h1>
         <button class="ac-export-btn" @onclick="ExportCsv">
             <i class="bi bi-download"></i>
-            @Loc.Get("btn.export.csv", CurrentLang)
+            Export CSV
         </button>
     </div>
 
@@ -200,7 +199,7 @@
         <div class="ac-table-card">
             <div class="ac-empty">
                 <div class="ac-empty-icon">📋</div>
-                <h3>@Loc.Get("empty.no.complaints", CurrentLang)</h3>
+                <h3>No complaints found</h3>
                 <p>No complaints have been submitted yet.</p>
             </div>
         </div>
@@ -212,13 +211,13 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>@Loc.Get("complaint.title", CurrentLang)</th>
-                        <th>@Loc.Get("complaint.citizen", CurrentLang)</th>
-                        <th>@Loc.Get("complaint.category", CurrentLang)</th>
-                        <th>@Loc.Get("complaint.status", CurrentLang)</th>
-                        <th>@Loc.Get("complaint.priority", CurrentLang)</th>
-                        <th>@Loc.Get("complaint.sla", CurrentLang)</th>
-                        <th>@Loc.Get("complaint.submitted", CurrentLang)</th>
+                        <th>Title</th>
+                        <th>Citizen</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>SLA</th>
+                        <th>Submitted</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -265,7 +264,7 @@
                             <td><span class="ac-date-cell">@c.CreatedAt.ToString("MMM dd, yyyy")</span></td>
                             <td>
                                 <a href="/admin/complaints/@c.Id" class="ac-view-btn">
-                                    @Loc.Get("btn.view", CurrentLang) <i class="bi bi-arrow-right"></i>
+                                    View <i class="bi bi-arrow-right"></i>
                                 </a>
                             </td>
                         </tr>
@@ -304,7 +303,6 @@
     private ComplaintFilterDto Filter = new() { PageSize = 15 };
     private int CurrentPage = 1;
     private bool IsLoading = true;
-    private string CurrentLang = "en";
     private IEnumerable<ComplaintDto> SortedItems =>
         (Result.Items ?? Enumerable.Empty<ComplaintDto>()).OrderByDescending(c => c.Status.ToString() == "Reopened" ? 1 : 0);
     private bool _statusOpen;
@@ -335,7 +333,6 @@
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-        CurrentLang = authState.User.FindFirst("language")?.Value ?? "en";
         Categories = await CategoryService.GetActiveAsync();
         CategoryOptions = Categories.Select(c => new CivicPulse.Core.DTOs.DropdownOption
         {

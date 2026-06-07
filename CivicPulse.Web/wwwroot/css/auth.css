@@ -85,14 +85,6 @@
     z-index: 1;
 }
 
-.auth-brand-urdu {
-    font-family: 'Noto Nastaliq Urdu', serif;
-    font-size: 18px;
-    opacity: 0.6;
-    margin-top: 4px;
-    position: relative;
-    z-index: 1;
-}
 
 .auth-svg {
     margin-top: 40px;
@@ -128,13 +120,6 @@
     font-size: 16px;
 }
 
-.auth-brand-footer {
-    margin-top: auto;
-    font-size: 11px;
-    opacity: 0.4;
-    position: relative;
-    z-index: 1;
-}
 
 /* ===== Right Form Panel ===== */
 .auth-panel {
@@ -587,30 +572,6 @@
     background: var(--cp-accent-l);
 }
 
-/* ===== Language Toggle ===== */
-.auth-lang-toggle {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    z-index: 2;
-}
-
-.auth-lang-btn {
-    padding: 6px 12px;
-    border: 1px solid rgba(255,255,255,.2);
-    border-radius: 6px;
-    background: rgba(255,255,255,.08);
-    color: #fff;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all var(--cp-transition);
-    font-family: 'Noto Nastaliq Urdu', serif;
-}
-
-.auth-lang-btn:hover {
-    background: rgba(255,255,255,.15);
-}
 
 /* ===== Submit Complaint Auth Hint ===== */
 .auth-hint {

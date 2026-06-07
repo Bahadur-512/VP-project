@@ -320,7 +320,7 @@ a:hover{color:var(--cp-primary)}
 .cp-auth-brand-icon{font-size:56px;margin-bottom:14px;position:relative;z-index:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,.2))}
 .cp-auth-brand-name{font-size:32px;font-weight:800;position:relative;z-index:1;text-shadow:0 2px 8px rgba(0,0,0,.2)}
 .cp-auth-brand-tagline{font-size:15px;opacity:.7;max-width:380px;text-align:center;margin-top:6px;position:relative;z-index:1}
-.cp-auth-brand-urdu{font-family:'Noto Nastaliq Urdu',serif;font-size:20px;opacity:.5;margin-top:14px;position:relative;z-index:1}
+
 .cp-auth-svg{margin-top:20px;opacity:.3;position:relative;z-index:1}
 .cp-auth-panel{flex:1;display:flex;align-items:center;justify-content:center;padding:48px;background:var(--cp-surface)}
 .cp-auth-wrap{width:100%;max-width:420px;animation:cp-fade-in .5s ease}
@@ -380,19 +380,7 @@ a:hover{color:var(--cp-primary)}
 .cp-fade-in{animation:cp-fade-in .3s ease}
 .cp-scale-in{animation:cp-scale-in .2s ease}
 
-[lang="ur"]{direction:rtl}
-[lang="ur"] .cp-sidebar{right:0;left:auto}
-[lang="ur"] .cp-main{margin-left:0;margin-right:var(--cp-sidebar-w)}
-[lang="ur"] .cp-timeline{padding-left:0;padding-right:20px}
-[lang="ur"] .cp-timeline-item{padding:0 24px 16px 0;border-left:none;border-right:2px solid var(--cp-border)}
-[lang="ur"] .cp-timeline-dot{left:auto;right:-6px}
-[lang="ur"] .cp-timeline-item:last-child{border-right-color:transparent}
-[lang="ur"] .cp-search-group .cp-form-group{margin-bottom:0}
-[lang="ur"] .cp-kanban-card{border-left:none;border-right:3px solid transparent}
-[lang="ur"] .cp-kanban-card.critical{border-right-color:var(--cp-critical)}
-[lang="ur"] .cp-kanban-card.high{border-right-color:var(--cp-high)}
-[lang="ur"] .cp-kanban-card.medium{border-right-color:var(--cp-medium)}
-[lang="ur"] .cp-kanban-card.low{border-right-color:var(--cp-low)}
+
 
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -401,7 +389,7 @@ a:hover{color:var(--cp-primary)}
 
 @media(max-width:1023px){
   .cp-sidebar{transform:translateX(-100%)}
-  [lang="ur"] .cp-sidebar{transform:translateX(100%)}
+
   .cp-sidebar.open{transform:translateX(0)}
   .cp-sidebar-overlay.open{display:block}
   .cp-main{margin-left:0}

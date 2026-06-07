@@ -14,7 +14,6 @@ public class ApplicationUser : BaseEntity
     public bool IsActive { get; set; } = true;
     public bool IsEmailVerified { get; set; }
     public string EmailVerificationToken { get; set; } = string.Empty;
-    public string PreferredLanguage { get; set; } = "en";
     public DateTime? LastLoginAt { get; set; }
     public int FailedLoginAttempts { get; set; }
     public DateTime? LockoutEndAt { get; set; }

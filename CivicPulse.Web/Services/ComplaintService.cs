@@ -59,7 +59,7 @@ public class ComplaintService : IComplaintService
             .FirstOrDefaultAsync(c => c.Id == categoryId)
             ?? throw new InvalidOperationException("Invalid category.");
 
-        var priority = _categorizationEngine.AssignPriority(dto.Title, dto.Description, category);
+        var priority = category.DefaultPriority;
 
         var complaint = new Complaint
         {
@@ -90,11 +90,9 @@ public class ComplaintService : IComplaintService
         };
         await _statusHistoryRepo.AddAsync(statusHistory);
 
-        await _notificationService.CreateWithUrduAsync(citizenId,
+        await _notificationService.CreateAsync(citizenId,
             "Complaint Submitted",
             $"Your complaint {complaint.ComplaintNumber} has been submitted successfully.",
-            "شکایت جمع ہو گئی",
-            $"آپ کی شکایت {complaint.ComplaintNumber} کامیابی سے جمع ہو گئی ہے۔",
             NotificationType.StatusUpdate, complaint.Id);
 
         await _auditLogService.LogAsync("COMPLAINT_CREATED", "Complaint", complaint.Id,
@@ -260,20 +258,16 @@ public class ComplaintService : IComplaintService
         };
         await _statusHistoryRepo.AddAsync(statusHistory);
 
-        await _notificationService.CreateWithUrduAsync(complaint.CitizenId,
+        await _notificationService.CreateAsync(complaint.CitizenId,
             "Status Updated",
             $"Your complaint {complaint.ComplaintNumber} status changed to {newStatus}.",
-            "اسٹیٹس اپ ڈیٹ",
-            $"آپ کی شکایت {complaint.ComplaintNumber} کی اسٹیٹس تبدیل ہو گئی ہے۔",
             NotificationType.StatusUpdate, complaint.Id);
 
         if (newStatus == ComplaintStatus.Resolved)
         {
-            await _notificationService.CreateWithUrduAsync(complaint.CitizenId,
+            await _notificationService.CreateAsync(complaint.CitizenId,
                 "Feedback Requested",
                 $"Your complaint {complaint.ComplaintNumber} has been resolved. Please provide feedback.",
-                "فیڈ بیک کی درخواست",
-                $"آپ کی شکایت {complaint.ComplaintNumber} حل ہو گئی ہے۔ براہ کرم فیڈ بیک دیں۔",
                 NotificationType.FeedbackRequest, complaint.Id);
         }
 
