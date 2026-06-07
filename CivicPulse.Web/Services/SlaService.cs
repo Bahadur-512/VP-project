@@ -10,13 +10,15 @@ public class SlaService : ISlaService
     private readonly IRepository<Complaint> _complaintRepo;
     private readonly INotificationService _notificationService;
     private readonly IAuditLogService _auditLogService;
+    private readonly IEmailNotificationService _email;
 
     public SlaService(IRepository<Complaint> complaintRepo, INotificationService notificationService,
-        IAuditLogService auditLogService)
+        IAuditLogService auditLogService, IEmailNotificationService email)
     {
         _complaintRepo = complaintRepo;
         _notificationService = notificationService;
         _auditLogService = auditLogService;
+        _email = email;
     }
 
     public async Task CheckAllSlasAsync()
@@ -61,6 +63,25 @@ public class SlaService : ISlaService
                     $"شکایت {complaint.ComplaintNumber} کا SLA وقت قریب ہے",
                     NotificationType.SlaWarning,
                     complaint.Id);
+
+                if (!complaint.SlaWarningEmailSent && complaint.Citizen?.Email != null)
+                {
+                    var remaining = GetRemainingTime(complaint);
+                    var remainingStr = remaining.Days > 0
+                        ? $"{remaining.Days}d {remaining.Hours}h"
+                        : $"{remaining.Hours}h {remaining.Minutes}m";
+
+                    await _email.SendSlaWarningAsync(
+                        toEmail: complaint.Citizen.Email,
+                        citizenName: complaint.Citizen.FullName,
+                        complaintNumber: complaint.ComplaintNumber,
+                        complaintTitle: complaint.Title,
+                        remaining: remainingStr
+                    );
+
+                    complaint.SlaWarningEmailSent = true;
+                    _complaintRepo.Update(complaint);
+                }
             }
         }
 

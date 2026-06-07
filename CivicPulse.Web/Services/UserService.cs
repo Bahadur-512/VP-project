@@ -13,13 +13,16 @@ public class UserService : IUserService
     private readonly IRepository<ApplicationUser> _userRepo;
     private readonly IConfiguration _configuration;
     private readonly IAuditLogService _auditLogService;
+    private readonly IEmailNotificationService _email;
 
     public UserService(IRepository<ApplicationUser> userRepo,
-        IConfiguration configuration, IAuditLogService auditLogService)
+        IConfiguration configuration, IAuditLogService auditLogService,
+        IEmailNotificationService email)
     {
         _userRepo = userRepo;
         _configuration = configuration;
         _auditLogService = auditLogService;
+        _email = email;
     }
 
     public async Task<UserDto> RegisterAsync(RegisterDto dto)
@@ -221,6 +224,69 @@ public class UserService : IUserService
             Page = page,
             PageSize = pageSize
         };
+    }
+
+    public async Task<bool> InitiatePasswordResetAsync(string email)
+    {
+        var user = await _userRepo.FirstOrDefaultAsync(
+            u => u.Email.ToLower() == email.ToLower());
+
+        if (user == null) return true;
+
+        var token = Convert.ToBase64String(
+            System.Security.Cryptography.RandomNumberGenerator.GetBytes(32))
+            .Replace("+", "-").Replace("/", "_").Replace("=", "");
+
+        user.PasswordResetToken = token;
+        user.PasswordResetTokenExpiry = DateTime.UtcNow.AddHours(1);
+        _userRepo.Update(user);
+        await _userRepo.SaveChangesAsync();
+
+        await _email.SendPasswordResetAsync(
+            toEmail: user.Email,
+            userName: user.FullName,
+            resetToken: token
+        );
+
+        await _auditLogService.LogAsync(
+            "PASSWORD_RESET_REQUESTED", "User", user.Id,
+            null, null, null,
+            $"Password reset requested for {user.Email}");
+
+        return true;
+    }
+
+    public async Task<bool> ValidateResetTokenAsync(string token)
+    {
+        var user = await _userRepo.FirstOrDefaultAsync(
+            u => u.PasswordResetToken == token &&
+                 u.PasswordResetTokenExpiry > DateTime.UtcNow);
+
+        return user != null;
+    }
+
+    public async Task<bool> ResetPasswordByTokenAsync(string token, string newPassword)
+    {
+        var user = await _userRepo.FirstOrDefaultAsync(
+            u => u.PasswordResetToken == token &&
+                 u.PasswordResetTokenExpiry > DateTime.UtcNow);
+
+        if (user == null) return false;
+        if (newPassword.Length < 8) return false;
+
+        user.PasswordHash = PasswordHelper.HashPassword(newPassword);
+        user.PasswordResetToken = null;
+        user.PasswordResetTokenExpiry = null;
+        user.UpdatedAt = DateTime.UtcNow;
+        _userRepo.Update(user);
+        await _userRepo.SaveChangesAsync();
+
+        await _auditLogService.LogAsync(
+            "PASSWORD_RESET_COMPLETED", "User", user.Id,
+            null, null, user.Id,
+            $"Password reset completed for {user.Email}");
+
+        return true;
     }
 
     private UserDto MapToDto(ApplicationUser user) => new()

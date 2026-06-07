@@ -21,6 +21,7 @@ public class Complaint : BaseEntity
     public int ReopenCount { get; set; }
     public bool IsArchived { get; set; }
     public bool FeedbackRequested { get; set; }
+    public bool SlaWarningEmailSent { get; set; } = false;
 
     public int CitizenId { get; set; }
     public ApplicationUser Citizen { get; set; } = null!;

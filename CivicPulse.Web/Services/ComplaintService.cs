@@ -18,11 +18,13 @@ public class ComplaintService : IComplaintService
     private readonly INotificationService _notificationService;
     private readonly IAuditLogService _auditLogService;
     private readonly IConfiguration _configuration;
+    private readonly IEmailNotificationService _email;
 
     public ComplaintService(IRepository<Complaint> complaintRepo, IRepository<Category> categoryRepo,
         IRepository<StatusHistory> statusHistoryRepo, IRepository<ApplicationUser> userRepo,
         CategorizationEngine categorizationEngine, INotificationService notificationService,
-        IAuditLogService auditLogService, IConfiguration configuration)
+        IAuditLogService auditLogService, IConfiguration configuration,
+        IEmailNotificationService email)
     {
         _complaintRepo = complaintRepo;
         _categoryRepo = categoryRepo;
@@ -32,6 +34,7 @@ public class ComplaintService : IComplaintService
         _notificationService = notificationService;
         _auditLogService = auditLogService;
         _configuration = configuration;
+        _email = email;
     }
 
     public async Task<ComplaintDto> CreateComplaintAsync(CreateComplaintDto dto, int citizenId)
@@ -99,6 +102,18 @@ public class ComplaintService : IComplaintService
             citizenId, $"Complaint {complaint.ComplaintNumber} created");
 
         await _statusHistoryRepo.SaveChangesAsync();
+
+        var citizen = await _userRepo.Query().FirstOrDefaultAsync(u => u.Id == citizenId);
+        if (citizen?.Email != null)
+        {
+            await _email.SendComplaintSubmittedAsync(
+                toEmail: citizen.Email,
+                citizenName: citizen.FullName,
+                complaintNumber: complaint.ComplaintNumber,
+                complaintTitle: complaint.Title,
+                category: category.Name ?? ""
+            );
+        }
 
         return await GetByIdAsync(complaint.Id);
     }
@@ -266,6 +281,29 @@ public class ComplaintService : IComplaintService
             JsonSerializer.Serialize(new { Status = oldStatus.ToString() }),
             JsonSerializer.Serialize(new { Status = newStatus.ToString() }),
             adminId, $"Status changed from {oldStatus} to {newStatus} for {complaint.ComplaintNumber}");
+
+        if (complaint.Citizen?.Email != null)
+        {
+            await _email.SendStatusUpdateAsync(
+                toEmail: complaint.Citizen.Email,
+                citizenName: complaint.Citizen.FullName,
+                complaintNumber: complaint.ComplaintNumber,
+                complaintTitle: complaint.Title,
+                oldStatus: oldStatus.ToString(),
+                newStatus: newStatus.ToString(),
+                note: note
+            );
+
+            if (newStatus == ComplaintStatus.Resolved)
+            {
+                await _email.SendFeedbackRequestAsync(
+                    toEmail: complaint.Citizen.Email,
+                    citizenName: complaint.Citizen.FullName,
+                    complaintNumber: complaint.ComplaintNumber,
+                    complaintId: complaint.Id
+                );
+            }
+        }
 
         await _complaintRepo.SaveChangesAsync();
 
