@@ -4,23 +4,26 @@
 @inject AuthenticationStateProvider AuthStateProvider
 
 @code {
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        if (user.Identity?.IsAuthenticated == true)
+        if (firstRender)
         {
-            var role = user.FindFirst("role")?.Value ?? "";
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
 
-            if (role == "Admin")
-                Navigation.NavigateTo("/admin/dashboard", replace: true);
+            if (user.Identity?.IsAuthenticated == true)
+            {
+                var role = user.FindFirst("role")?.Value ?? "";
+
+                if (role == "Admin")
+                    Navigation.NavigateTo("/admin/dashboard", replace: true);
+                else
+                    Navigation.NavigateTo("/citizen/dashboard", replace: true);
+            }
             else
-                Navigation.NavigateTo("/citizen/dashboard", replace: true);
-        }
-        else
-        {
-            Navigation.NavigateTo("/login", replace: true);
+            {
+                Navigation.NavigateTo("/login", replace: true);
+            }
         }
     }
 }

@@ -604,7 +604,11 @@
     {
         var authState = await AuthState.GetAuthenticationStateAsync();
         var user = authState.User;
+        var claims = string.Join(", ", user.Claims.Select(c => $"{c.Type}={c.Value}"));
+        Console.WriteLine($"[SubmitComplaint] Claims: {claims}");
+        Console.WriteLine($"[SubmitComplaint] IsAuthenticated: {user.Identity?.IsAuthenticated}");
         UserId = int.Parse(user.FindFirst("userId")?.Value ?? "0");
+        Console.WriteLine($"[SubmitComplaint] UserId={UserId}");
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -713,8 +717,11 @@
         }
         catch (Exception ex)
         {
-            submitError = $"Failed to submit: {ex.Message}";
-            Console.WriteLine($"[SubmitError] {ex}");
+            var inner = ex.InnerException?.Message;
+            submitError = inner != null
+                ? $"Failed to submit: {inner} (UserId={UserId})"
+                : $"Failed to submit: {ex.Message} (UserId={UserId})";
+            Console.WriteLine($"[SubmitError] UserId={UserId} {ex}");
         }
         finally
         {

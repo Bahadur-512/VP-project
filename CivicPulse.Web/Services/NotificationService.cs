@@ -25,7 +25,9 @@ public class NotificationService : INotificationService
         {
             UserId = userId,
             Title = title,
+            TitleUrdu = title,
             Body = body,
+            BodyUrdu = body,
             Type = type,
             RelatedComplaintId = relatedComplaintId,
             IsRead = false

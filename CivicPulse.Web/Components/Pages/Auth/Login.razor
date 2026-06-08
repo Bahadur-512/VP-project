@@ -49,6 +49,10 @@
                 {
                     <div class="auth-alert auth-alert-danger"><i class="bi bi-exclamation-triangle-fill"></i> @Error</div>
                 }
+                @if (!string.IsNullOrEmpty(SuccessMessage))
+                {
+                    <div class="auth-alert auth-alert-success"><i class="bi bi-check-circle-fill"></i> @SuccessMessage</div>
+                }
 
                 <div class="auth-form-group">
                     <label class="auth-label" for="loginEmail">Email</label>
@@ -81,13 +85,7 @@
                     <span class="auth-btn-text">Log In</span>
                 </button>
 
-                <div class="auth-demo">
-                    <strong>Demo Credentials</strong><br/>
-                    <strong>Admin:</strong> <code>admin&#64;civicpulse.pk</code> / <code>Admin@123!</code>
-                    <button type="button" class="auth-demo-fill" @onclick="FillAdminCreds">Fill</button><br/>
-                    <strong>Citizen:</strong> <code>citizen&#64;demo.pk</code> / <code>Demo@123!</code>
-                    <button type="button" class="auth-demo-fill" @onclick="FillCitizenCreds">Fill</button>
-                </div>
+                
             }
 
             @if (activeTab == "register")
@@ -266,6 +264,7 @@
     private string LoginPassword = "";
     private bool RememberMe = true;
     private string Error = "";
+    private string SuccessMessage = "";
 
     // Register fields
     private string RegFullName = "";
@@ -283,9 +282,18 @@
         if (!string.IsNullOrEmpty(q))
         {
             var pairs = q.Split('&').Select(p => p.Split('=', 2)).ToDictionary(p => p[0], p => Uri.UnescapeDataString(p[1]));
-            pairs.TryGetValue("error", out Error!);
+            var errorVal = pairs.GetValueOrDefault("error", "");
+            var registeredVal = pairs.GetValueOrDefault("registered", "");
             if (pairs.TryGetValue("tab", out var tab) && tab == "register")
-                activeTab = "register";
+            {
+                if (string.IsNullOrEmpty(errorVal)) activeTab = "register";
+                RegError = errorVal;
+            }
+            else
+            {
+                Error = errorVal;
+            }
+            if (registeredVal == "true") SuccessMessage = "Registration successful! You can now log in with your credentials.";
         }
     }
 
@@ -293,34 +301,19 @@
 
     private void GoToLoginTab() => SwitchTab("login");
     private void GoToRegisterTab() => SwitchTab("register");
-    private void FillAdminCreds() => FillCredentials("admin");
-    private void FillCitizenCreds() => FillCredentials("citizen");
 
     private void SwitchTab(string tab)
     {
         activeTab = tab;
         Error = "";
         RegError = "";
-    }
-
-    private void FillCredentials(string role)
-    {
-        if (role == "admin")
-        {
-            LoginEmail = "admin@civicpulse.pk";
-            LoginPassword = "Admin@123!";
-        }
-        else
-        {
-            LoginEmail = "citizen@demo.pk";
-            LoginPassword = "Demo@123!";
-        }
-        activeTab = "login";
+        SuccessMessage = "";
     }
 
     private async Task HandleLoginSubmit()
     {
         Error = "";
+        SuccessMessage = "";
         if (string.IsNullOrWhiteSpace(LoginEmail) || string.IsNullOrWhiteSpace(LoginPassword))
         {
             Error = "Please fill in all fields.";

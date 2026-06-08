@@ -5,12 +5,17 @@
                 <NotAuthorized>
                     @if (context.User.Identity?.IsAuthenticated != true)
                     {
-                        <RedirectToLogin />
+                        <div class="cp-empty-state" style="background:transparent;min-height:400px;">
+                            <div class="cp-empty-icon" style="font-size:32px;">🔑</div>
+                            <div class="cp-empty-title">Please Log In</div>
+                            <div class="cp-empty-text">You need to be logged in to access this page.</div>
+                            <a href="/login" class="cp-btn cp-btn-primary">Go to Login</a>
+                        </div>
                     }
                     else
                     {
-                        <div class="cp-empty-state">
-                            <div class="cp-empty-icon">🔒</div>
+                        <div class="cp-empty-state" style="background:transparent;min-height:400px;">
+                            <div class="cp-empty-icon" style="font-size:32px;">🔒</div>
                             <div class="cp-empty-title">Access Denied</div>
                             <div class="cp-empty-text">You do not have permission to access this page.</div>
                             <a href="/" class="cp-btn cp-btn-primary">Go to Home</a>

@@ -4,7 +4,8 @@ obj/
 *.db
 *.user
 *.suo
-appsettings.*.local
+appsettings.Local.json
+appsettings.*.local*
 wwwroot/uploads/
 .DS_Store
 Thumbs.db
